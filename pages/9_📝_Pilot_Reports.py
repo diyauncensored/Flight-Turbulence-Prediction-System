@@ -12,6 +12,10 @@ st.markdown("Submit and view actual turbulence encounters reported by pilots")
 # Initialize database
 db = TurbulenceDatabase()
 
+# Show demo mode warning if applicable
+if db.demo_mode:
+    st.warning("⚠️ Running in demo mode. Data is stored in session and will be lost when you refresh. Configure DATABASE_URL for persistence.")
+
 # Create tabs
 tab1, tab2, tab3 = st.tabs(["Submit Report", "View Reports", "Statistics"])
 
@@ -62,12 +66,17 @@ with tab1:
         )
         
         # Location coordinates (optional)
-        st.write("Location Coordinates (Optional)")
-        col_lat, col_lon = st.columns(2)
-        with col_lat:
-            location_lat = st.number_input("Latitude", min_value=-90.0, max_value=90.0, value=None, format="%.6f")
-        with col_lon:
-            location_lon = st.number_input("Longitude", min_value=-180.0, max_value=180.0, value=None, format="%.6f")
+        use_custom_location = st.checkbox("Specify Custom Location Coordinates", value=False)
+        
+        location_lat = None
+        location_lon = None
+        
+        if use_custom_location:
+            col_lat, col_lon = st.columns(2)
+            with col_lat:
+                location_lat = st.number_input("Latitude", min_value=-90.0, max_value=90.0, value=0.0, format="%.6f")
+            with col_lon:
+                location_lon = st.number_input("Longitude", min_value=-180.0, max_value=180.0, value=0.0, format="%.6f")
         
         weather_conditions = st.text_area(
             "Weather Conditions",

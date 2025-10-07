@@ -7,6 +7,18 @@ import streamlit as st
 class TurbulenceDatabase:
     def __init__(self):
         self.database_url = os.getenv("DATABASE_URL")
+        self.demo_mode = not bool(self.database_url)
+        
+        # In-memory storage for demo mode
+        if self.demo_mode:
+            if 'demo_pilot_reports' not in st.session_state:
+                st.session_state.demo_pilot_reports = []
+            if 'demo_alerts' not in st.session_state:
+                st.session_state.demo_alerts = []
+            if 'demo_encounters' not in st.session_state:
+                st.session_state.demo_encounters = []
+            if 'demo_id_counter' not in st.session_state:
+                st.session_state.demo_id_counter = 1
         
     def get_connection(self):
         """Get database connection"""
@@ -97,6 +109,19 @@ class TurbulenceDatabase:
     
     def add_pilot_report(self, report_data):
         """Add a new pilot turbulence report"""
+        # Demo mode - use session state
+        if self.demo_mode:
+            report_id = st.session_state.demo_id_counter
+            st.session_state.demo_id_counter += 1
+            
+            report = {
+                'id': report_id,
+                'created_at': datetime.now(),
+                **report_data
+            }
+            st.session_state.demo_pilot_reports.append(report)
+            return report_id
+        
         conn = self.get_connection()
         if not conn:
             return False
@@ -138,6 +163,22 @@ class TurbulenceDatabase:
     
     def get_pilot_reports(self, airport_code=None, start_date=None, end_date=None, limit=100):
         """Get pilot reports with optional filters"""
+        # Demo mode - use session state
+        if self.demo_mode:
+            reports = st.session_state.demo_pilot_reports.copy()
+            
+            # Apply filters
+            if airport_code:
+                reports = [r for r in reports if r.get('airport_code') == airport_code]
+            if start_date:
+                reports = [r for r in reports if r.get('report_date') >= start_date]
+            if end_date:
+                reports = [r for r in reports if r.get('report_date') <= end_date]
+            
+            # Sort and limit
+            reports = sorted(reports, key=lambda x: x.get('report_date', datetime.now()), reverse=True)
+            return reports[:limit]
+        
         conn = self.get_connection()
         if not conn:
             return []
@@ -178,6 +219,19 @@ class TurbulenceDatabase:
     
     def add_alert(self, alert_data):
         """Add a new turbulence alert"""
+        # Demo mode - use session state
+        if self.demo_mode:
+            alert_id = st.session_state.demo_id_counter
+            st.session_state.demo_id_counter += 1
+            
+            alert = {
+                'id': alert_id,
+                'created_at': datetime.now(),
+                **alert_data
+            }
+            st.session_state.demo_alerts.append(alert)
+            return alert_id
+        
         conn = self.get_connection()
         if not conn:
             return False
@@ -217,6 +271,19 @@ class TurbulenceDatabase:
     
     def get_active_alerts(self, airport_code=None):
         """Get active turbulence alerts"""
+        # Demo mode - use session state
+        if self.demo_mode:
+            alerts = [a for a in st.session_state.demo_alerts if a.get('is_active', True)]
+            
+            # Filter by expiry
+            alerts = [a for a in alerts if not a.get('valid_until') or a['valid_until'] > datetime.now()]
+            
+            # Filter by airport
+            if airport_code:
+                alerts = [a for a in alerts if a.get('airport_code') == airport_code]
+            
+            return sorted(alerts, key=lambda x: x.get('alert_date', datetime.now()), reverse=True)
+        
         conn = self.get_connection()
         if not conn:
             return []
@@ -252,6 +319,14 @@ class TurbulenceDatabase:
     
     def deactivate_alert(self, alert_id):
         """Deactivate an alert"""
+        # Demo mode - use session state
+        if self.demo_mode:
+            for alert in st.session_state.demo_alerts:
+                if alert.get('id') == alert_id:
+                    alert['is_active'] = False
+                    return True
+            return False
+        
         conn = self.get_connection()
         if not conn:
             return False
