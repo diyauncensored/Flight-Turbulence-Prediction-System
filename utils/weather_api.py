@@ -11,11 +11,25 @@ import streamlit as st
 class WeatherAPI:
     def __init__(self):
         # Use API key from environment variable
-        self.api_key = os.getenv("OPENWEATHERMAP_API_KEY", "your_api_key_here")
+        self.api_key = os.getenv("OPENWEATHERMAP_API_KEY")
         self.base_url = "http://api.openweathermap.org/data/2.5"
+        self.cache = {}
+        self.cache_duration = 300  # 5 minutes cache
         
     def get_current_weather(self, lat, lon):
         """Get current weather data for given coordinates"""
+        # Check API key availability
+        if not self.api_key:
+            st.warning("⚠️ Weather API key not configured. Using demo mode.")
+            return self._get_demo_weather(lat, lon)
+        
+        # Check cache
+        cache_key = f"weather_{lat}_{lon}"
+        if cache_key in self.cache:
+            cached_data, cached_time = self.cache[cache_key]
+            if (datetime.now() - cached_time).total_seconds() < self.cache_duration:
+                return cached_data
+        
         try:
             url = f"{self.base_url}/weather"
             params = {
@@ -42,17 +56,40 @@ class WeatherAPI:
                     "timestamp": datetime.now()
                 }
                 
+                # Cache the result
+                self.cache[cache_key] = (weather_data, datetime.now())
+                
                 return weather_data
             else:
                 st.error(f"Weather API Error: {response.status_code}")
-                return None
+                return self._get_demo_weather(lat, lon)
                 
         except requests.exceptions.RequestException as e:
             st.error(f"Weather API Request Failed: {str(e)}")
-            return None
+            return self._get_demo_weather(lat, lon)
         except Exception as e:
             st.error(f"Weather API Error: {str(e)}")
-            return None
+            return self._get_demo_weather(lat, lon)
+    
+    def _get_demo_weather(self, lat, lon):
+        """Generate demo weather data as fallback"""
+        import random
+        import math
+        
+        # Generate realistic demo data based on location
+        base_temp = 25 + 10 * math.sin(lat / 10)
+        
+        return {
+            "temperature": base_temp + random.uniform(-5, 5),
+            "pressure": 1013 + random.uniform(-10, 10),
+            "humidity": 60 + random.uniform(-20, 20),
+            "wind_speed": abs(random.gauss(10, 5)),
+            "wind_direction": random.uniform(0, 360),
+            "visibility": random.uniform(5, 15),
+            "weather_condition": random.choice(["Clear", "Clouds", "Rain"]),
+            "description": "demo data",
+            "timestamp": datetime.now()
+        }
     
     def get_forecast_data(self, lat, lon, hours=48):
         """Get forecast data for turbulence prediction"""
