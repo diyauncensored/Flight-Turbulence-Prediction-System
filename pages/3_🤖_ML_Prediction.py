@@ -8,6 +8,7 @@ from utils.airport_data import INDIAN_AIRPORTS
 from utils.weather_api import weather_api
 from utils.ml_models import turbulence_model
 from utils.turbulence_calculator import turbulence_calc
+from utils.severity_classification import TurbulenceSeverityClassifier
 from datetime import datetime
 
 st.set_page_config(page_title="ML Prediction", page_icon="🤖", layout="wide")
