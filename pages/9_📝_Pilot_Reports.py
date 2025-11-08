@@ -88,7 +88,7 @@ with tab1:
             placeholder="Any additional observations or comments..."
         )
     
-    if st.button("Submit Report", type="primary", use_container_width=True):
+    if st.button("Submit Report", type="primary", use_container_width='stretch'):
         # Combine date and time
         report_datetime = datetime.combine(report_date, report_time)
         
@@ -251,7 +251,7 @@ with tab3:
         
         # Detailed statistics table
         st.subheader("Detailed Breakdown")
-        st.dataframe(severity_df, use_container_width=True)
+        st.dataframe(severity_df, width='stretch')
     else:
         st.info("No data available for statistics in the selected period.")
 

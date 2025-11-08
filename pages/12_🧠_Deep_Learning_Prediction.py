@@ -68,26 +68,33 @@ with tab1:
     with col1:
         if st.button("🚀 Generate LSTM Prediction", type="primary", use_container_width=True):
             with st.spinner("Running deep learning model..."):
-                # Get current weather
-                weather = weather_api.get_current_weather(
-                    airport['coordinates'][0],
-                    airport['coordinates'][1]
-                )
-                
-                if weather:
-                    # Prepare flight parameters
-                    flight_params = {
-                        'altitude': altitude,
-                        'aircraft_type': 'Medium'
-                    }
+                try:
+                    # Get current weather using lat/lon from airport data
+                    weather = weather_api.get_current_weather(
+                        airport['lat'],  # Using lat instead of coordinates
+                        airport['lon']   # Using lon instead of coordinates
+                    )
                     
-                    # Get prediction
-                    prediction = lstm_predictor.predict(weather, flight_params)
-                    
-                    # Store in session state
-                    st.session_state.lstm_prediction = prediction
-                    st.session_state.lstm_weather = weather
-                    st.session_state.lstm_airport = airport
+                    if weather:
+                        # Prepare flight parameters
+                        flight_params = {
+                            'altitude': altitude,
+                            'aircraft_type': 'Medium'
+                        }
+                        
+                        # Get prediction
+                        prediction = lstm_predictor.predict(weather, flight_params)
+                        
+                        # Store in session state
+                        st.session_state.lstm_prediction = prediction
+                        st.session_state.lstm_weather = weather
+                        st.session_state.lstm_airport = airport
+                        
+                        st.success("✅ Prediction generated successfully!")
+                    else:
+                        st.error("❌ Could not fetch weather data. Please try again.")
+                except Exception as e:
+                    st.error(f"❌ Error generating prediction: {str(e)}")
     
     with col2:
         st.markdown("**Current Conditions**")

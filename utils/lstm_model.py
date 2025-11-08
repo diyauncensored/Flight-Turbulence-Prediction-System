@@ -2,13 +2,17 @@ import numpy as np
 import os
 import pickle
 from datetime import datetime
+import streamlit as st
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 # Try importing TensorFlow/Keras with fallback
 try:
+    import tensorflow as tf
     from tensorflow import keras
-    from keras import layers
+    from tensorflow.keras import layers
     TF_AVAILABLE = True
 except ImportError:
+    print("TensorFlow import error. Please ensure TensorFlow is installed correctly.")
     TF_AVAILABLE = False
     keras = None
     layers = None
@@ -229,15 +233,35 @@ class LSTMTurbulencePredictor:
         if self.model is None:
             self._build_model()
         
-        # Train model
+        # Create Streamlit progress bar
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        
+        # Custom callback to update progress
+        class ProgressCallback(tf.keras.callbacks.Callback):
+            def on_epoch_end(self, epoch, logs=None):
+                progress = (epoch + 1) / epochs
+                progress_bar.progress(progress)
+                status_text.text(f'Training Progress - Epoch {epoch + 1}/{epochs}')
+                if logs:
+                    loss = logs.get('loss', 0)
+                    val_loss = logs.get('val_loss', 0)
+                    st.text(f'Loss: {loss:.4f}, Validation Loss: {val_loss:.4f}')
+
+        # Train model with progress tracking
         history = self.model.fit(
             X_train,
             y_train,
             epochs=epochs,
             batch_size=batch_size,
             validation_split=0.2,
-            verbose=0
+            verbose=1,
+            callbacks=[ProgressCallback()]
         )
+        
+        # Clear the progress indicators
+        progress_bar.empty()
+        status_text.empty()
         
         # Save model
         os.makedirs("models", exist_ok=True)
@@ -315,10 +339,75 @@ class LSTMTurbulencePredictor:
         # Normalize
         X_train_normalized = np.array([self.normalize_data(seq) for seq in X_train])
         
-        # Train
+        # Train with user feedback
+        st.info("Pre-training LSTM model with synthetic data...")
         history = self.train_on_new_data(X_train_normalized, y_train, epochs=100, batch_size=64)
+        st.success("Pre-training complete!")
         
         return history
+
+    def evaluate_performance(self, num_samples=1000, quick_train_if_missing=True, quick_epochs=10):
+        """Evaluate LSTM regression performance and classification accuracy for severity.
+
+        Returns a dictionary with regression metrics and severity classification accuracy.
+        If the model is missing and quick_train_if_missing is True, a short training run
+        will be performed to enable evaluation (this shows progress in Streamlit).
+        """
+        # Generate synthetic data
+        X, y = self.generate_training_data(num_samples)
+
+        # Normalize sequences
+        X_normalized = np.array([self.normalize_data(seq) for seq in X])
+
+        # If model not available, optionally perform a short training run
+        if self.model is None and TF_AVAILABLE:
+            if quick_train_if_missing:
+                st.info("LSTM model not found - running a short training pass to enable evaluation...")
+                try:
+                    self.train_on_new_data(X_normalized, y, epochs=quick_epochs, batch_size=32)
+                    st.success("Quick training finished - proceeding with evaluation")
+                except Exception as e:
+                    st.error(f"Quick training failed: {e}")
+                    return None
+            else:
+                st.warning("LSTM model not available. Run pretraining or enable quick_train_if_missing to evaluate.")
+                return None
+
+        if not TF_AVAILABLE or self.model is None:
+            st.warning("TensorFlow not available or model missing - cannot evaluate LSTM model.")
+            return None
+
+        # Make predictions
+        preds = self.model.predict(X_normalized, verbose=0).reshape(-1)
+        preds = np.clip(preds, 0, 10)
+
+        # Regression metrics
+        rmse = np.sqrt(mean_squared_error(y, preds))
+        mae = mean_absolute_error(y, preds)
+        r2 = r2_score(y, preds)
+        accuracy = 100 * (1 - rmse / (np.mean(y) if np.mean(y) != 0 else 1))
+
+        # Severity classification accuracy
+        try:
+            from utils.severity_classification import TurbulenceSeverityClassifier
+            classifier = TurbulenceSeverityClassifier()
+            true_sev = [classifier.classify_severity(val) for val in y]
+            pred_sev = [classifier.classify_severity(float(p)) for p in preds]
+            correct = sum(1 for a, b in zip(true_sev, pred_sev) if a == b)
+            severity_accuracy = 100 * correct / len(y)
+        except Exception:
+            severity_accuracy = None
+
+        return {
+            'lstm': {
+                'rmse': float(rmse),
+                'mae': float(mae),
+                'r2_score': float(r2),
+                'accuracy': float(accuracy)
+            },
+            'severity_classification_accuracy': float(severity_accuracy) if severity_accuracy is not None else None,
+            'samples_evaluated': int(len(y))
+        }
 
 # Global instance
 lstm_predictor = LSTMTurbulencePredictor()

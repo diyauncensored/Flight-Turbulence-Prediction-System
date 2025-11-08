@@ -1,4 +1,5 @@
 import numpy as np
+import streamlit as st
 
 class TurbulenceSeverityClassifier:
     """Enhanced turbulence severity classification with detailed intensity levels"""
@@ -55,7 +56,7 @@ class TurbulenceSeverityClassifier:
         # Aircraft structural limits (as percentage of design limits)
         self.structural_concern = {
             'Smooth': 0,
-            'Light Chop': 5,
+            'Light Chop': 5,   
             'Light': 10,
             'Light-Moderate': 20,
             'Moderate': 35,
@@ -95,15 +96,51 @@ class TurbulenceSeverityClassifier:
             }
         }
     
+    @st.cache_data(ttl=300)  # Cache results for 5 minutes
     def calculate_turbulence_index(self, weather_params):
-        """Calculate turbulence index from weather parameters"""
+        """Calculate turbulence index from weather parameters with enhanced accuracy"""
         
-        # Extract parameters
-        wind_speed = weather_params.get('wind_speed', 0)
-        wind_shear = weather_params.get('wind_shear', 0)
-        temperature_gradient = weather_params.get('temp_gradient', 0)
-        pressure_change = weather_params.get('pressure_change', 0)
-        altitude = weather_params.get('altitude', 35000)
+        try:
+            # Extract and validate parameters
+            wind_speed = float(weather_params.get('wind_speed', 0))
+            wind_shear = float(weather_params.get('wind_shear', 0))
+            temperature_gradient = float(weather_params.get('temp_gradient', 0))
+            pressure_change = float(weather_params.get('pressure_change', 0))
+            altitude = float(weather_params.get('altitude', 35000))
+            
+            # Additional weather factors
+            humidity = float(weather_params.get('humidity', 50))
+            visibility = float(weather_params.get('visibility', 10000))
+            weather_condition = weather_params.get('weather_condition', 'clear')
+            
+            # Validate ranges
+            if not (0 <= wind_speed <= 150):  # max wind speed in knots
+                raise ValueError("Wind speed out of valid range")
+            if not (0 <= altitude <= 45000):  # max altitude in feet
+                raise ValueError("Altitude out of valid range")
+                
+            # Weather condition impact factors
+            weather_factors = {
+                'clear': 1.0,
+                'cloudy': 1.1,
+                'rain': 1.3,
+                'thunderstorm': 1.8,
+                'snow': 1.4
+            }
+            weather_multiplier = weather_factors.get(weather_condition.lower(), 1.0)
+            
+            # Visibility impact (reduced visibility often indicates worse conditions)
+            visibility_factor = 1.0 + max(0, (10000 - visibility) / 20000)
+            
+            # Humidity impact (high humidity can indicate unstable air)
+            humidity_factor = 1.0 + (humidity - 50) / 200  # Small increase for higher humidity
+            
+        except ValueError as e:
+            st.error(f"Invalid parameter: {str(e)}")
+            return 0.0
+        except Exception as e:
+            st.error(f"Error calculating turbulence index: {str(e)}")
+            return 0.0
         
         # Base turbulence from wind speed (0-3)
         wind_component = min(wind_speed / 25.0, 3.0)
@@ -125,13 +162,35 @@ class TurbulenceSeverityClassifier:
         else:
             altitude_factor = 1.0
         
-        # Calculate total index
-        turbulence_index = (wind_component + shear_component + temp_component + pressure_component) * altitude_factor
+        # Calculate base index
+        base_index = (wind_component + shear_component + temp_component + pressure_component)
+        
+        # Apply environmental factors
+        environmental_factor = weather_multiplier * visibility_factor * humidity_factor
+        
+        # Calculate final index with all factors
+        turbulence_index = base_index * altitude_factor * environmental_factor
+        
+        # Calculate confidence score (0-1)
+        confidence_score = min(1.0, max(0.5, (
+            (1.0 if wind_speed > 0 else 0.6) *  # Wind data reliability
+            (1.0 if wind_shear > 0 else 0.7) *  # Wind shear data reliability
+            (1.0 if temperature_gradient != 0 else 0.8) *  # Temperature data reliability
+            (1.0 if visibility < 8000 else 0.9) *  # Visibility impact on confidence
+            (0.9 if weather_condition == 'clear' else 1.0)  # Weather condition reliability
+        )))
+        
+        # Store confidence score for later use
+        self._last_confidence = confidence_score
         
         # Clamp to 0-10 range
         turbulence_index = max(0, min(10, turbulence_index))
         
         return turbulence_index
+
+    def get_confidence_score(self):
+        """Get the confidence score of the last prediction"""
+        return getattr(self, '_last_confidence', 0.8)  # Default 0.8 if no prediction made
     
     def get_all_severity_levels(self):
         """Get all severity levels with their ranges"""

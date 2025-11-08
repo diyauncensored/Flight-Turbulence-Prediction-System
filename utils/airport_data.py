@@ -2,6 +2,18 @@
 Airport data for major Indian airports
 """
 
+def get_airports():
+    """Get list of all airports with their details"""
+    return [{"code": code, "name": info["name"], **info} for code, info in INDIAN_AIRPORTS.items()]
+
+def get_airport_info(code):
+    """Get detailed information for a specific airport"""
+    return INDIAN_AIRPORTS.get(code, {})
+
+def get_all_airport_data():
+    """Get complete airport dataset"""
+    return INDIAN_AIRPORTS
+
 INDIAN_AIRPORTS = {
     "DEL": {
         "name": "Indira Gandhi International Airport",

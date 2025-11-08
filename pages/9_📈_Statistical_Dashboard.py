@@ -343,7 +343,7 @@ if "Season" in grouping_options:
     fig_monthly.update_yaxes(title_text="Mean Intensity", row=1, col=2)
     
     fig_monthly.update_layout(height=400, showlegend=False)
-    st.plotly_chart(fig_monthly, use_container_width=True)
+    st.plotly_chart(fig_monthly, width='stretch')
 
 if "Altitude Range" in grouping_options:
     st.markdown("## ✈️ Statistics by Altitude Range")

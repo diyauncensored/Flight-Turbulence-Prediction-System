@@ -50,7 +50,7 @@ with tab1:
         xaxis=dict(range=[0, 10])
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
     
     # Detailed information table
     st.subheader("Detailed Severity Descriptions")
@@ -149,14 +149,15 @@ with tab3:
     from utils.weather_api import WeatherAPI
     
     weather_api = WeatherAPI()
-    airports = get_airports()
+    from utils.airport_data import get_airports
     
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        airport_names = {f"{a['name']} ({a['code']})": a for a in airports}
-        selected = st.selectbox("Select Airport", options=list(airport_names.keys()))
-        airport = airport_names[selected]
+        airports = get_airports()
+        airport_options = {f"{airport['name']} ({airport['code']})": airport for airport in airports}
+        selected = st.selectbox("Select Airport", options=list(airport_options.keys()))
+        airport = airport_options[selected]
         
         altitude_input = st.number_input(
             "Flight Altitude (feet)",
@@ -170,8 +171,8 @@ with tab3:
             with st.spinner("Analyzing conditions..."):
                 # Get weather data
                 weather = weather_api.get_current_weather(
-                    airport['coordinates'][0],
-                    airport['coordinates'][1]
+                    airport['lat'],
+                    airport['lon']
                 )
                 
                 if weather:

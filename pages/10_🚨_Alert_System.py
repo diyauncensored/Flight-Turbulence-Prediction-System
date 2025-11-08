@@ -164,8 +164,8 @@ with tab2:
     
     for airport in airports:
         weather = weather_api.get_current_weather(
-            airport['coordinates'][0],
-            airport['coordinates'][1]
+            airport['lat'],
+            airport['lon']
         )
         
         if weather:

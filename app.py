@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 from utils.airport_data import INDIAN_AIRPORTS
 import plotly.express as px
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
 
 # Configure the page
 st.set_page_config(

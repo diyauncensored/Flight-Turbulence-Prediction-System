@@ -30,8 +30,8 @@ class AlertSystem:
         for airport in airports:
             # Get weather data
             weather = self.weather_api.get_current_weather(
-                airport['coordinates'][0],
-                airport['coordinates'][1]
+                airport['lat'],
+                airport['lon']
             )
             
             if not weather:
