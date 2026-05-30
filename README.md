@@ -23,18 +23,18 @@ The app will open automatically in your default web browser at `http://localhost
 
 ## Features
 
-- 🗺️ Airport Map
-- 🌤️ Weather Analysis
-- 🤖 ML Prediction
-- ✈️ Route Assessment
-- 📊 Historical Analysis
-- ⚡ Real-Time Prediction
-- 🌬️ Atmospheric Visualization
-- 📤 Data Upload
-- 📈 Statistical Dashboard
-- 🚨 Alert System
-- 📊 Severity Classification
-- 🧠 Deep Learning Prediction
+- Airport Map
+- Weather Analysis
+- ML Prediction
+- Route Assessment
+- Historical Analysis
+- Real-Time Prediction
+- Atmospheric Visualization
+- Data Upload
+- Statistical Dashboard
+- Alert System
+- Severity Classification
+- Deep Learning Prediction
 
 ## Environment Variables
 
