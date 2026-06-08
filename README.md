@@ -5,19 +5,20 @@ A comprehensive system for predicting and analyzing turbulence at Indian airport
 ## Quick Start
 
 1. Make sure you have Python 3.11 or higher installed:
-```bash
+in project directory, run
 python --version
-```
 
 2. Install dependencies:
-```bash
+in project directory, to install dependencies, run: 
 pip install -r requirements.txt
-```
 
-3. Run the application:
-```bash
+
+3. To activate virtual environment, run:
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\.venv\Scripts\Activate.ps1
+
+4. To run the application now:
 streamlit run app.py
-```
 
 The app will open automatically in your default web browser at `http://localhost:8501`
 
