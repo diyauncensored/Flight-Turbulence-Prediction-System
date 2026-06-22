@@ -449,35 +449,6 @@ if st.session_state.prediction_log:
         total_alerts = len(st.session_state.alerts)
         st.metric("Total Alerts", total_alerts)
 
-# Data export
-st.markdown("## Export Real-Time Data")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("Export Current Data") and st.session_state.real_time_data:
-        current_df = pd.DataFrame(st.session_state.real_time_data)
-        csv_data = current_df.to_csv(index=False)
-        
-        st.download_button(
-            label="Download Current Data CSV",
-            data=csv_data,
-            file_name=f"realtime_turbulence_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            mime="text/csv"
-        )
-
-with col2:
-    if st.button("Export Prediction Log") and st.session_state.prediction_log:
-        log_df = pd.DataFrame(st.session_state.prediction_log)
-        csv_log = log_df.to_csv(index=False)
-        
-        st.download_button(
-            label="Download Log CSV",
-            data=csv_log,
-            file_name=f"prediction_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            mime="text/csv"
-        )
-
 # Auto-refresh mechanism
 if auto_refresh:
     time.sleep(1)  # Small delay to prevent too frequent updates

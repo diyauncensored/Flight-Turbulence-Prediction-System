@@ -33,7 +33,6 @@ deployed on streamlit: https://diyauncensored-flight-turbulence-prediction-syste
 - Historical Analysis
 - Real-Time Prediction
 - Atmospheric Visualization
-- Data Upload
 - Statistical Dashboard
 - Alert System
 - Severity Classification

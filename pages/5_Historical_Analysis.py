@@ -482,43 +482,6 @@ elif analysis_type == "Risk Trends":
     else:
         st.info("No severe turbulence incidents found in the selected time period.")
 
-# Data export functionality
-st.markdown("## Data Export")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("Export Analysis Data"):
-        export_data = historical_data[[
-            'timestamp', 'airport', 'turbulence_intensity', 'risk_level',
-            'temperature', 'pressure', 'humidity', 'wind_speed', 'weather_condition'
-        ]].copy()
-        
-        csv_data = export_data.to_csv(index=False)
-        st.download_button(
-            label="Download CSV",
-            data=csv_data,
-            file_name=f"turbulence_analysis_{analysis_period.lower().replace(' ', '_')}.csv",
-            mime="text/csv"
-        )
-
-with col2:
-    if st.button("Export Summary Stats"):
-        summary_stats = historical_data.groupby('airport').agg({
-            'turbulence_intensity': ['count', 'mean', 'std', 'min', 'max'],
-            'temperature': 'mean',
-            'wind_speed': 'mean',
-            'pressure': 'mean'
-        }).round(3)
-        
-        csv_summary = summary_stats.to_csv()
-        st.download_button(
-            label="Download Summary CSV",
-            data=csv_summary,
-            file_name=f"turbulence_summary_{analysis_period.lower().replace(' ', '_')}.csv",
-            mime="text/csv"
-        )
-
 # Key insights
 st.markdown("## Key Insights")
 

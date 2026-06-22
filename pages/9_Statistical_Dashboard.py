@@ -601,61 +601,6 @@ with col2:
     fig_dist.update_layout(height=400)
     st.plotly_chart(fig_dist, use_container_width=True)
 
-# Export functionality
-st.markdown("## Export Statistical Reports")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    if st.button("Export Summary Statistics"):
-        # Create summary report
-        summary_data = {
-            'Metric': ['Total Reports', 'Average Intensity', 'Maximum Intensity', 'Standard Deviation', 'Severe Incidents (%)'],
-            'Value': [
-                len(stats_data),
-                stats_data['turbulence_intensity'].mean(),
-                stats_data['turbulence_intensity'].max(),
-                stats_data['turbulence_intensity'].std(),
-                (len(stats_data[stats_data['turbulence_intensity'] >= 2.5]) / len(stats_data)) * 100
-            ]
-        }
-        summary_df = pd.DataFrame(summary_data)
-        
-        csv_summary = summary_df.to_csv(index=False)
-        st.download_button(
-            label="Download Summary CSV",
-            data=csv_summary,
-            file_name=f"turbulence_summary_statistics_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv"
-        )
-
-with col2:
-    if st.button("Export Airport Statistics"):
-        if 'airport_stats' in locals():
-            csv_airport = airport_stats.to_csv(index=False)
-            st.download_button(
-                label="Download Airport Stats CSV",
-                data=csv_airport,
-                file_name=f"airport_turbulence_statistics_{datetime.now().strftime('%Y%m%d')}.csv",
-                mime="text/csv"
-            )
-
-with col3:
-    if st.button("Export Detailed Data"):
-        # Export full dataset with all derived features
-        export_columns = ['timestamp', 'airport', 'turbulence_intensity', 'altitude', 'season', 
-                         'altitude_range', 'time_of_day', 'risk_level', 'temperature', 'wind_speed', 'pressure']
-        
-        export_data = stats_data[[col for col in export_columns if col in stats_data.columns]]
-        
-        csv_detailed = export_data.to_csv(index=False)
-        st.download_button(
-            label="Download Detailed CSV",
-            data=csv_detailed,
-            file_name=f"detailed_turbulence_data_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv"
-        )
-
 # Key findings and recommendations
 st.markdown("## Key Findings & Recommendations")
 
