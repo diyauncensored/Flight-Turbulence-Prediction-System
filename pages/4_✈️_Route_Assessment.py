@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 st.set_page_config(page_title="Route Assessment", page_icon="✈️", layout="wide")
 
-st.title("✈️ Flight Route Turbulence Risk Assessment")
+st.title("Flight Route Turbulence Risk Assessment")
 st.markdown("Comprehensive route analysis for turbulence risk evaluation")
 
 # Sidebar controls
@@ -123,7 +123,7 @@ if origin_airport and destination_airport:
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.markdown("## 🗺️ Route Visualization")
+        st.markdown("## Route Visualization")
         
         # Get airport information
         origin_info = INDIAN_AIRPORTS[origin_airport]
@@ -180,7 +180,7 @@ if origin_airport and destination_airport:
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        st.markdown("## 📊 Route Summary")
+        st.markdown("## Route Summary")
         
         # Route metrics
         st.metric("Distance", f"{predefined_distance:.0f} km")
@@ -202,7 +202,7 @@ if origin_airport and destination_airport:
         st.text(f"Elevation: {dest_info['elevation']} ft")
     
     # Route analysis
-    if st.button("🔍 Analyze Route Turbulence Risk", type="primary"):
+    if st.button("Analyze Route Turbulence Risk", type="primary"):
         with st.spinner("Analyzing turbulence risk along the route..."):
             
             # Create waypoints along the route
@@ -309,7 +309,7 @@ if origin_airport and destination_airport:
         analysis_df = st.session_state.route_analysis
         
         if not analysis_df.empty:
-            st.markdown("## 📈 Route Analysis Results")
+            st.markdown("## Route Analysis Results")
             
             # Overall route risk assessment
             avg_turbulence = analysis_df['turbulence_intensity'].mean()
@@ -334,7 +334,7 @@ if origin_airport and destination_airport:
                 st.metric("Comfort Index", f"{avg_comfort:.1f}/100")
             
             # Route risk visualization
-            st.markdown("### 🎯 Turbulence Risk Along Route")
+            st.markdown("### Turbulence Risk Along Route")
             
             # Create turbulence intensity chart
             fig = go.Figure()
@@ -374,7 +374,7 @@ if origin_airport and destination_airport:
             st.plotly_chart(fig, use_container_width=True)
             
             # Weather parameters along route
-            st.markdown("### 🌤️ Weather Conditions Along Route")
+            st.markdown("### Weather Conditions Along Route")
             
             # Create subplots for weather parameters
             from plotly.subplots import make_subplots
@@ -420,7 +420,7 @@ if origin_airport and destination_airport:
             st.plotly_chart(weather_fig, use_container_width=True)
             
             # Route segments table
-            st.markdown("### 📋 Detailed Segment Analysis")
+            st.markdown("### Detailed Segment Analysis")
             
             # Select columns for display
             display_columns = ['segment', 'distance_km', 'estimated_time_hours', 
@@ -456,7 +456,7 @@ if origin_airport and destination_airport:
             )
             
             # Risk hotspots identification
-            st.markdown("### ⚠️ Risk Hotspots")
+            st.markdown("### Risk Hotspots")
             
             high_risk_segments = analysis_df[analysis_df['turbulence_intensity'] >= 2.5]
             
@@ -467,19 +467,19 @@ if origin_airport and destination_airport:
                     st.error(f"Segment {segment['segment']}: {segment['distance_km']:.0f}km from origin - "
                            f"Risk Level: {segment['risk_level']} (Intensity: {segment['turbulence_intensity']:.2f})")
             else:
-                st.success("✅ No high-risk segments detected along the route")
+                st.success("No high-risk segments detected along the route.")
             
             # Route recommendations
-            st.markdown("### 💡 Route Recommendations")
+            st.markdown("### Route Recommendations")
             
             if avg_turbulence < 1.0:
-                st.success("✅ **Excellent Route**: Low turbulence expected throughout the journey")
+                st.success("**Excellent Route**: Low turbulence expected throughout the journey.")
             elif avg_turbulence < 2.5:
-                st.info("⚠️ **Moderate Route**: Some turbulence expected, standard precautions advised")
+                st.info("**Moderate Route**: Some turbulence expected, standard precautions advised.")
             elif avg_turbulence < 4.0:
-                st.warning("🔶 **Challenging Route**: Significant turbulence expected, consider alternative timing")
+                st.warning("**Challenging Route**: Significant turbulence expected, consider alternative timing.")
             else:
-                st.error("🔴 **High Risk Route**: Severe turbulence possible, consider route change or delay")
+                st.error("**High Risk Route**: Severe turbulence possible, consider route change or delay.")
             
             # Additional recommendations
             recommendations = []
@@ -498,10 +498,10 @@ if origin_airport and destination_airport:
             
             if recommendations:
                 for rec in recommendations:
-                    st.info(f"💡 {rec}")
+                    st.info(rec)
     
     # Route comparison tool
-    with st.expander("🔄 Compare Alternative Routes"):
+    with st.expander("Compare Alternative Routes"):
         st.markdown("### Route Alternatives")
         st.info("This feature would compare different routing options based on current weather conditions and historical turbulence data.")
         

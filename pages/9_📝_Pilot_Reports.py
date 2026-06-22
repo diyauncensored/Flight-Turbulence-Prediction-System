@@ -6,7 +6,7 @@ from utils.airport_data import get_airports
 
 st.set_page_config(page_title="Pilot Reports", page_icon="📝", layout="wide")
 
-st.title("📝 Pilot Turbulence Reporting System")
+st.title("Pilot Turbulence Reporting System")
 st.markdown("Submit and view actual turbulence encounters reported by pilots")
 
 # Initialize database
@@ -14,7 +14,7 @@ db = TurbulenceDatabase()
 
 # Show demo mode warning if applicable
 if db.demo_mode:
-    st.warning("⚠️ Running in demo mode. Data is stored in session and will be lost when you refresh. Configure DATABASE_URL for persistence.")
+    st.warning("Running in demo mode. Data is stored in session and will be lost when you refresh. Configure DATABASE_URL for persistence.")
 
 # Create tabs
 tab1, tab2, tab3 = st.tabs(["Submit Report", "View Reports", "Statistics"])
@@ -109,7 +109,7 @@ with tab1:
         report_id = db.add_pilot_report(report_data)
         
         if report_id:
-            st.success(f"✅ Report submitted successfully! Report ID: {report_id}")
+            st.success(f"Report submitted successfully! Report ID: {report_id}")
             st.balloons()
         else:
             st.error("Failed to submit report. Please try again.")

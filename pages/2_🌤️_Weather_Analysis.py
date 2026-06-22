@@ -10,7 +10,7 @@ from utils.data_processing import data_processor
 
 st.set_page_config(page_title="Weather Analysis", page_icon="🌤️", layout="wide")
 
-st.title("🌤️ Weather Data Analysis - Atmospheric Conditions")
+st.title("Weather Data Analysis - Atmospheric Conditions")
 st.markdown("Comprehensive weather analysis for turbulence prediction")
 
 # Sidebar controls
@@ -52,7 +52,7 @@ if not selected_airports:
 
 # Main analysis section
 if analysis_type == "Current Conditions":
-    st.markdown("## 📊 Current Weather Conditions")
+    st.markdown("## Current Weather Conditions")
     
     current_data = []
     
@@ -97,7 +97,7 @@ if analysis_type == "Current Conditions":
                 st.caption(f"Updated: {data['timestamp'].strftime('%H:%M:%S')}")
         
         # Comparative charts
-        st.markdown("## 📈 Comparative Analysis")
+        st.markdown("## Comparative Analysis")
         
         # Create comparison DataFrame
         comparison_df = pd.DataFrame(current_data)
@@ -149,7 +149,7 @@ if analysis_type == "Current Conditions":
             st.plotly_chart(fig, use_container_width=True)
 
 elif analysis_type == "Forecast Analysis":
-    st.markdown("## 🔮 Weather Forecast Analysis")
+    st.markdown("## Weather Forecast Analysis")
     
     # Airport selection for detailed forecast
     forecast_airport = st.selectbox(
@@ -241,7 +241,7 @@ elif analysis_type == "Forecast Analysis":
         st.error("Unable to fetch forecast data. Please check your internet connection.")
 
 elif analysis_type == "Comparative Analysis":
-    st.markdown("## ⚖️ Multi-Airport Comparative Analysis")
+    st.markdown("## Multi-Airport Comparative Analysis")
     
     comparative_data = []
     
@@ -349,7 +349,7 @@ elif analysis_type == "Comparative Analysis":
         st.error("Unable to fetch weather data for comparison.")
 
 # Weather alerts section
-st.markdown("## ⚠️ Weather Alerts")
+st.markdown("## Weather Alerts")
 
 if 'current_data' in locals() and current_data:
     alerts = []
@@ -372,6 +372,6 @@ if 'current_data' in locals() and current_data:
         for alert in alerts:
             st.warning(alert)
     else:
-        st.success("✅ No severe weather alerts for selected airports")
+        st.success("No severe weather alerts for selected airports.")
 else:
     st.info("Select airports and analysis type to view weather alerts")

@@ -12,7 +12,7 @@ from utils.turbulence_calculator import turbulence_calc
 
 st.set_page_config(page_title="Historical Analysis", page_icon="📊", layout="wide")
 
-st.title("📊 Historical Turbulence Data Analysis")
+st.title("Historical Turbulence Data Analysis")
 st.markdown("Time-series analysis and pattern detection in historical turbulence data")
 
 # Sidebar controls
@@ -95,7 +95,7 @@ historical_data['risk_level'] = historical_data['turbulence_intensity'].apply(
     lambda x: turbulence_model.get_turbulence_risk_level(x)[0]
 )
 
-st.markdown("## 📈 Historical Data Overview")
+st.markdown("## Historical Data Overview")
 
 # Summary statistics
 col1, col2, col3, col4 = st.columns(4)
@@ -119,7 +119,7 @@ with col4:
 
 # Main analysis based on selected type
 if analysis_type == "Temporal Patterns":
-    st.markdown("## ⏰ Temporal Pattern Analysis")
+    st.markdown("## Temporal Pattern Analysis")
     
     # Time series plot
     if aggregation_level == "Hourly":
@@ -167,7 +167,7 @@ if analysis_type == "Temporal Patterns":
     st.plotly_chart(fig, use_container_width=True)
     
     # Hourly pattern analysis
-    st.markdown("### ⏰ Daily Pattern Analysis")
+    st.markdown("### Daily Pattern Analysis")
     
     hourly_pattern = historical_data.groupby(['hour', 'airport']).agg({
         'turbulence_intensity': ['mean', 'std', 'count']
@@ -188,7 +188,7 @@ if analysis_type == "Temporal Patterns":
     st.plotly_chart(fig_hourly, use_container_width=True)
     
     # Day of week analysis
-    st.markdown("### 📅 Weekly Pattern Analysis")
+    st.markdown("### Weekly Pattern Analysis")
     
     day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     weekly_pattern = historical_data.groupby(['day_of_week', 'airport'])['turbulence_intensity'].mean().reset_index()
@@ -207,7 +207,7 @@ if analysis_type == "Temporal Patterns":
     st.plotly_chart(fig_weekly, use_container_width=True)
 
 elif analysis_type == "Seasonal Analysis":
-    st.markdown("## 🌡️ Seasonal Pattern Analysis")
+    st.markdown("## Seasonal Pattern Analysis")
     
     # Month-wise analysis
     monthly_stats = historical_data.groupby(['month', 'airport']).agg({
@@ -238,7 +238,7 @@ elif analysis_type == "Seasonal Analysis":
     st.plotly_chart(fig_seasonal, use_container_width=True)
     
     # Temperature vs Turbulence correlation
-    st.markdown("### 🌡️ Temperature-Turbulence Relationship")
+    st.markdown("### Temperature-Turbulence Relationship")
     
     fig_temp_turb = px.scatter(
         monthly_stats,
@@ -255,7 +255,7 @@ elif analysis_type == "Seasonal Analysis":
     st.plotly_chart(fig_temp_turb, use_container_width=True)
     
     # Seasonal risk distribution
-    st.markdown("### 📊 Seasonal Risk Distribution")
+    st.markdown("### Seasonal Risk Distribution")
     
     # Define seasons for India
     def get_season(month):
@@ -287,7 +287,7 @@ elif analysis_type == "Seasonal Analysis":
     st.plotly_chart(fig_risk_dist, use_container_width=True)
 
 elif analysis_type == "Weather Correlation":
-    st.markdown("## 🌤️ Weather Parameter Correlation Analysis")
+    st.markdown("## Weather Parameter Correlation Analysis")
     
     # Correlation matrix
     weather_columns = ['turbulence_intensity', 'temperature', 'pressure', 'humidity', 
@@ -307,7 +307,7 @@ elif analysis_type == "Weather Correlation":
     st.plotly_chart(fig_corr, use_container_width=True)
     
     # Weather condition impact
-    st.markdown("### 🌦️ Weather Condition Impact")
+    st.markdown("### Weather Condition Impact")
     
     weather_impact = historical_data.groupby(['weather_condition', 'airport']).agg({
         'turbulence_intensity': ['mean', 'std', 'count']
@@ -327,7 +327,7 @@ elif analysis_type == "Weather Correlation":
     st.plotly_chart(fig_weather_impact, use_container_width=True)
     
     # Wind speed analysis
-    st.markdown("### 💨 Wind Speed Analysis")
+    st.markdown("### Wind Speed Analysis")
     
     # Create wind speed categories
     historical_data['wind_category'] = pd.cut(
@@ -351,7 +351,7 @@ elif analysis_type == "Weather Correlation":
     st.plotly_chart(fig_wind, use_container_width=True)
 
 elif analysis_type == "Risk Trends":
-    st.markdown("## 📈 Risk Trend Analysis")
+    st.markdown("## Risk Trend Analysis")
     
     # Risk level trends over time
     daily_risk = historical_data.groupby([historical_data['timestamp'].dt.date, 'airport', 'risk_level']).size().reset_index(name='count')
@@ -374,7 +374,7 @@ elif analysis_type == "Risk Trends":
     st.plotly_chart(fig_risk_trend, use_container_width=True)
     
     # Risk escalation analysis
-    st.markdown("### ⚠️ Risk Escalation Patterns")
+    st.markdown("### Risk Escalation Patterns")
     
     # Calculate moving averages
     for airport in selected_airports:
@@ -424,7 +424,7 @@ elif analysis_type == "Risk Trends":
     st.plotly_chart(fig_ma, use_container_width=True)
     
     # Peak incident analysis
-    st.markdown("### 🔴 Peak Incident Analysis")
+    st.markdown("### Peak Incident Analysis")
     
     severe_incidents = historical_data[historical_data['turbulence_intensity'] >= 2.5].copy()
     
@@ -452,7 +452,7 @@ elif analysis_type == "Risk Trends":
         st.plotly_chart(fig_severe_time, use_container_width=True)
         
         # Top 10 most severe incidents
-        st.markdown("#### 🔍 Most Severe Incidents")
+        st.markdown("#### Most Severe Incidents")
         
         top_incidents = severe_incidents.nlargest(10, 'turbulence_intensity')[
             ['timestamp', 'airport', 'turbulence_intensity', 'temperature', 'wind_speed', 'weather_condition']
@@ -483,12 +483,12 @@ elif analysis_type == "Risk Trends":
         st.info("No severe turbulence incidents found in the selected time period.")
 
 # Data export functionality
-st.markdown("## 💾 Data Export")
+st.markdown("## Data Export")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("📊 Export Analysis Data"):
+    if st.button("Export Analysis Data"):
         export_data = historical_data[[
             'timestamp', 'airport', 'turbulence_intensity', 'risk_level',
             'temperature', 'pressure', 'humidity', 'wind_speed', 'weather_condition'
@@ -503,7 +503,7 @@ with col1:
         )
 
 with col2:
-    if st.button("📈 Export Summary Stats"):
+    if st.button("Export Summary Stats"):
         summary_stats = historical_data.groupby('airport').agg({
             'turbulence_intensity': ['count', 'mean', 'std', 'min', 'max'],
             'temperature': 'mean',
@@ -520,7 +520,7 @@ with col2:
         )
 
 # Key insights
-st.markdown("## 💡 Key Insights")
+st.markdown("## Key Insights")
 
 insights = []
 
@@ -529,28 +529,28 @@ overall_avg = historical_data['turbulence_intensity'].mean()
 overall_severe_pct = (len(historical_data[historical_data['turbulence_intensity'] >= 2.5]) / len(historical_data)) * 100
 
 if overall_avg < 1.0:
-    insights.append("✅ Overall turbulence levels are low across selected airports")
+    insights.append("Overall turbulence levels are low across selected airports")
 elif overall_avg > 2.0:
-    insights.append("⚠️ High average turbulence intensity detected - monitor closely")
+    insights.append("High average turbulence intensity detected - monitor closely")
 
 if overall_severe_pct > 10:
-    insights.append(f"🔴 High percentage of severe turbulence incidents: {overall_severe_pct:.1f}%")
+    insights.append(f"High percentage of severe turbulence incidents: {overall_severe_pct:.1f}%")
 elif overall_severe_pct < 2:
-    insights.append(f"✅ Low severe turbulence rate: {overall_severe_pct:.1f}%")
+    insights.append(f"Low severe turbulence rate: {overall_severe_pct:.1f}%")
 
 # Airport-specific insights
 airport_stats = historical_data.groupby('airport')['turbulence_intensity'].mean()
 highest_risk_airport = airport_stats.idxmax()
 lowest_risk_airport = airport_stats.idxmin()
 
-insights.append(f"📊 Highest average turbulence: {highest_risk_airport} ({airport_stats[highest_risk_airport]:.2f})")
-insights.append(f"📊 Lowest average turbulence: {lowest_risk_airport} ({airport_stats[lowest_risk_airport]:.2f})")
+insights.append(f"Highest average turbulence: {highest_risk_airport} ({airport_stats[highest_risk_airport]:.2f})")
+insights.append(f"Lowest average turbulence: {lowest_risk_airport} ({airport_stats[lowest_risk_airport]:.2f})")
 
 # Seasonal insights
 if 'season' in historical_data.columns:
     seasonal_avg = historical_data.groupby('season')['turbulence_intensity'].mean()
     peak_season = seasonal_avg.idxmax()
-    insights.append(f"🌪️ Peak turbulence season: {peak_season}")
+    insights.append(f"Peak turbulence season: {peak_season}")
 
 for insight in insights:
     st.info(insight)

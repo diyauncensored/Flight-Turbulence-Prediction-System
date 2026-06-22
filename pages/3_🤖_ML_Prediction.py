@@ -13,14 +13,14 @@ from datetime import datetime
 
 st.set_page_config(page_title="ML Prediction", page_icon="🤖", layout="wide")
 
-st.title("🤖 Machine Learning Turbulence Prediction")
+st.title("Machine Learning Turbulence Prediction")
 st.markdown("Advanced AI-powered turbulence forecasting using multiple ML models")
 
 # Initialize the turbulence predictor
 predictor = TurbulencePredictor()
 
 # Add a section for model training
-st.markdown("## 🎯 Model Training and Performance")
+st.markdown("## Model Training and Performance")
 
 # Create training progress section
 training_container = st.container()
@@ -29,8 +29,8 @@ with training_container:
     train_col1, train_col2 = st.columns([1, 2])
 
     with train_col1:
-        st.markdown("### 🔄 Train Models")
-        if st.button("🚀 Train/Retrain Models", type="primary", key="train_button"):
+        st.markdown("### Train Models")
+        if st.button("Train/Retrain Models", type="primary", key="train_button"):
             with st.spinner("Training models in progress..."):
                 # Create a placeholder for training progress
                 progress_placeholder = st.empty()
@@ -56,13 +56,13 @@ with training_container:
                     {training_log}
                     ```
                     """)
-                    st.success("✅ Training completed successfully!")
+                    st.success("Training completed successfully.")
                 except Exception as e:
                     sys.stdout = old_stdout
-                    st.error(f"❌ Training failed: {str(e)}")
+                    st.error(f"Training failed: {str(e)}")
 
     with train_col2:
-        st.markdown("### ℹ️ Training Information")
+        st.markdown("### Training Information")
         st.info("""
         **Model Training Process:**
         1. Generates synthetic training data
@@ -81,14 +81,14 @@ with training_container:
 performance_container = st.container()
 
 with performance_container:
-    st.markdown("## 📊 Model Performance Metrics")
+    st.markdown("## Model Performance Metrics")
     accuracies = predictor.get_model_accuracies()
     
     if accuracies:
         metrics_col1, metrics_col2 = st.columns(2)
         
         with metrics_col1:
-            st.info("🌲 Random Forest Model")
+            st.info("Random Forest Model")
             st.metric(
                 "Accuracy",
                 f"{accuracies['random_forest']['accuracy']:.2f}%",
@@ -106,7 +106,7 @@ with performance_container:
             )
         
         with metrics_col2:
-            st.info("🚀 Gradient Boosting Model")
+            st.info("Gradient Boosting Model")
             st.metric(
                 "Accuracy",
                 f"{accuracies['gradient_boosting']['accuracy']:.2f}%",
@@ -124,7 +124,7 @@ with performance_container:
             )
         
         # Add performance comparison visualization
-        st.markdown("### 📈 Performance Comparison")
+        st.markdown("### Performance Comparison")
         
         # Create comparison dataframe
         comparison_data = pd.DataFrame({
@@ -162,7 +162,7 @@ with performance_container:
         # LSTM evaluation and severity classification
         from utils.lstm_model import lstm_predictor
 
-        st.markdown("### 🧠 LSTM Model & Severity Classification")
+        st.markdown("### LSTM Model & Severity Classification")
         with st.expander("Evaluate LSTM model and severity classifier (on synthetic data)"):
             st.write("This will run a short evaluation on synthetic samples. If the LSTM model isn't available it may perform a brief quick-training run to enable evaluation.")
             if st.button("Evaluate LSTM & Severity", key="eval_lstm_button"):
@@ -195,7 +195,7 @@ train_col1, train_col2 = st.columns([1, 2])
 
 with train_col1:
     st.markdown("### Train Models")
-    if st.button("🚀 Train/Retrain Models", type="primary"):
+    if st.button("Train/Retrain Models", type="primary"):
         with st.spinner("Training models in progress..."):
             # Create a placeholder for training progress
             progress_placeholder = st.empty()
@@ -220,7 +220,7 @@ with train_col1:
             {training_log}
             ```
             """)
-            st.success("✅ Training completed successfully!")
+            st.success("Training completed successfully.")
 
 with train_col2:
     st.markdown("### Training Information")
@@ -238,7 +238,7 @@ with train_col2:
     and see detailed training progress.
     """)
 with st.sidebar:
-    st.markdown("### 🔧 Model Training")
+    st.markdown("### Model Training")
     if st.button("Retrain Models"):
         with st.spinner("Training models..."):
             # Create a placeholder for training progress
@@ -266,7 +266,7 @@ with st.sidebar:
             st.success("Training completed!")
 
 # Show model accuracies
-st.markdown("### 📊 Current Model Performance")
+st.markdown("### Current Model Performance")
 accuracies = predictor.get_model_accuracies()
 if accuracies:
     perf_col1, perf_col2 = st.columns(2)
@@ -326,7 +326,7 @@ if accuracies:
     st.plotly_chart(fig, use_container_width=True)
 
     with metrics_col1:
-        st.info("🌲 Random Forest Model")
+        st.info("Random Forest Model")
         st.metric(
             "Accuracy",
             f"{accuracies['random_forest']['accuracy']:.2f}%",
@@ -344,7 +344,7 @@ if accuracies:
         )
     
     with metrics_col2:
-        st.info("🚀 Gradient Boosting Model")
+        st.info("Gradient Boosting Model")
         st.metric(
             "Accuracy",
             f"{accuracies['gradient_boosting']['accuracy']:.2f}%",
@@ -434,9 +434,9 @@ with st.sidebar.expander("Advanced Parameters"):
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.markdown("## 🎯 Turbulence Prediction Results")
+    st.markdown("## Turbulence Prediction Results")
     
-    if st.button("🚀 Generate Predictions", type="primary"):
+    if st.button("Generate Predictions", type="primary"):
         with st.spinner("Running ML models and generating predictions..."):
             
             # Get weather data
@@ -513,7 +513,7 @@ with col1:
             risk_level, risk_color = "Severe", "#dc3545"
         
         # Big prediction display
-        st.markdown("### 🎯 Primary Prediction")
+        st.markdown("### Primary Prediction")
         
         pred_col1, pred_col2, pred_col3 = st.columns(3)
         
@@ -555,7 +555,7 @@ with col1:
         
         # Model comparison
         if len(selected_models) > 1:
-            st.markdown("### 📊 Model Comparison")
+            st.markdown("### Model Comparison")
             
             model_comparison = []
             model_mapping = {
@@ -645,7 +645,7 @@ with col1:
                 )
         
         # Additional calculations
-        st.markdown("### 🔍 Detailed Analysis")
+        st.markdown("### Detailed Analysis")
         
         analysis_col1, analysis_col2 = st.columns(2)
         
@@ -684,13 +684,13 @@ with col1:
             st.metric("CAT Potential", f"{cat_potential}/5")
 
 with col2:
-    st.markdown("## 📈 Model Performance")
+    st.markdown("## Model Performance")
     
     # Feature importance
     feature_importance = predictor.get_feature_importance()
     
     if feature_importance is not None:
-        st.markdown("### 🎯 Feature Importance")
+        st.markdown("### Feature Importance")
         
         fig = px.bar(
             feature_importance.head(8),
@@ -705,7 +705,7 @@ with col2:
     
     # Current weather summary
     if 'weather_data' in st.session_state:
-        st.markdown("### 🌤️ Current Conditions")
+        st.markdown("### Current Conditions")
         
         weather = st.session_state.weather_data
         airport_code = st.session_state.selected_airport
@@ -725,7 +725,7 @@ with col2:
     
     # Flight parameters summary
     if 'flight_params' in st.session_state:
-        st.markdown("### ✈️ Flight Parameters")
+        st.markdown("### Flight Parameters")
         
         flight_info = st.session_state.flight_params
         
@@ -745,7 +745,7 @@ with col2:
         st.caption(altitude_info)
 
 # Model information and help
-with st.expander("📚 Model Information & Help"):
+with st.expander("Model Information & Help"):
     st.markdown("""
     ### Machine Learning Models Used
     

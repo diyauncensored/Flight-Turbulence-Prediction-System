@@ -12,7 +12,7 @@ from utils.turbulence_calculator import turbulence_calc
 
 st.set_page_config(page_title="Data Upload", page_icon="📤", layout="wide")
 
-st.title("📤 Data Upload and Custom Analysis")
+st.title("Data Upload and Custom Analysis")
 st.markdown("Upload custom flight parameters and historical turbulence data for analysis")
 
 # Initialize session state
@@ -44,11 +44,11 @@ create_visualizations = st.sidebar.checkbox("Create Visualizations", value=True)
 
 # Main content based on upload type
 if upload_type == "Flight Parameters":
-    st.markdown("## ✈️ Flight Parameters Upload")
+    st.markdown("## Flight Parameters Upload")
     st.info("Upload flight data including aircraft type, route, altitude, speed, and other flight parameters.")
     
     # Data format explanation
-    with st.expander("📋 Required Data Format"):
+    with st.expander("Required Data Format"):
         st.markdown("""
         **Required Columns:**
         - `flight_id`: Unique flight identifier
@@ -100,18 +100,18 @@ if upload_type == "Flight Parameters":
             else:
                 df = pd.read_csv(uploaded_file)
             
-            st.success(f"✅ Successfully loaded {len(df)} flight records")
+            st.success(f"Successfully loaded {len(df)} flight records")
             
             # Store in session state
             st.session_state.uploaded_data['flight_parameters'] = df
             
             # Display data preview
-            st.markdown("### 👀 Data Preview")
+            st.markdown("### Data Preview")
             st.dataframe(df.head(10), use_container_width=True)
             
             # Data validation
             if validate_data:
-                st.markdown("### ✅ Data Validation")
+                st.markdown("### Data Validation")
                 
                 validation_results = []
                 
@@ -120,36 +120,36 @@ if upload_type == "Flight Parameters":
                 missing_cols = [col for col in required_cols if col not in df.columns]
                 
                 if missing_cols:
-                    validation_results.append(f"❌ Missing required columns: {', '.join(missing_cols)}")
+                    validation_results.append(f"Missing required columns: {', '.join(missing_cols)}")
                 else:
-                    validation_results.append("✅ All required columns present")
+                    validation_results.append("All required columns present")
                 
                 # Check data types and ranges
                 if 'cruise_altitude' in df.columns:
                     invalid_altitudes = df[(df['cruise_altitude'] < 10000) | (df['cruise_altitude'] > 50000)]
                     if not invalid_altitudes.empty:
-                        validation_results.append(f"⚠️ {len(invalid_altitudes)} records with invalid altitudes")
+                        validation_results.append(f"{len(invalid_altitudes)} records with invalid altitudes")
                     else:
-                        validation_results.append("✅ Altitude values within valid range")
+                        validation_results.append("Altitude values within valid range")
                 
                 # Check for duplicates
                 duplicates = df.duplicated(subset=['flight_id']).sum()
                 if duplicates > 0:
-                    validation_results.append(f"⚠️ {duplicates} duplicate flight IDs found")
+                    validation_results.append(f"{duplicates} duplicate flight IDs found")
                 else:
-                    validation_results.append("✅ No duplicate flight IDs")
+                    validation_results.append("No duplicate flight IDs")
                 
                 for result in validation_results:
-                    if "❌" in result:
+                    if "Missing required" in result or "Error" in result:
                         st.error(result)
-                    elif "⚠️" in result:
+                    elif "records with invalid" in result or "duplicate" in result:
                         st.warning(result)
                     else:
                         st.success(result)
             
             # Generate predictions
             if perform_prediction and 'cruise_altitude' in df.columns:
-                st.markdown("### 🤖 Turbulence Predictions")
+                st.markdown("### Turbulence Predictions")
                 
                 with st.spinner("Generating turbulence predictions..."):
                     predictions_data = []
@@ -216,15 +216,15 @@ if upload_type == "Flight Parameters":
                     st.plotly_chart(fig_risk, use_container_width=True)
         
         except Exception as e:
-            st.error(f"❌ Error reading file: {str(e)}")
+            st.error(f"Error reading file: {str(e)}")
             st.info("Please check the file format and try again.")
 
 elif upload_type == "Historical Turbulence":
-    st.markdown("## 📊 Historical Turbulence Data Upload")
+    st.markdown("## Historical Turbulence Data Upload")
     st.info("Upload historical turbulence encounter data for analysis and model improvement.")
     
     # Data format explanation
-    with st.expander("📋 Required Data Format"):
+    with st.expander("Required Data Format"):
         st.markdown("""
         **Required Columns:**
         - `timestamp`: Date and time of turbulence encounter
@@ -258,17 +258,17 @@ elif upload_type == "Historical Turbulence":
             else:
                 df = pd.read_json(uploaded_file)
             
-            st.success(f"✅ Successfully loaded {len(df)} turbulence records")
+            st.success(f"Successfully loaded {len(df)} turbulence records")
             
             # Store in session state
             st.session_state.uploaded_data['historical_turbulence'] = df
             
             # Data preview
-            st.markdown("### 👀 Data Preview")
+            st.markdown("### Data Preview")
             st.dataframe(df.head(10), use_container_width=True)
             
             if generate_statistics:
-                st.markdown("### 📈 Statistical Analysis")
+                st.markdown("### Statistical Analysis")
                 
                 col1, col2 = st.columns(2)
                 
@@ -317,13 +317,13 @@ elif upload_type == "Historical Turbulence":
                     st.plotly_chart(fig_altitude, use_container_width=True)
         
         except Exception as e:
-            st.error(f"❌ Error reading file: {str(e)}")
+            st.error(f"Error reading file: {str(e)}")
 
 elif upload_type == "Weather Data":
-    st.markdown("## 🌤️ Weather Data Upload")
+    st.markdown("## Weather Data Upload")
     st.info("Upload weather observation data for correlation analysis with turbulence.")
     
-    with st.expander("📋 Required Data Format"):
+    with st.expander("Required Data Format"):
         st.markdown("""
         **Required Columns:**
         - `timestamp`: Observation timestamp
@@ -358,15 +358,15 @@ elif upload_type == "Weather Data":
             else:
                 df = pd.read_json(uploaded_file)
             
-            st.success(f"✅ Successfully loaded {len(df)} weather observations")
+            st.success(f"Successfully loaded {len(df)} weather observations")
             st.session_state.uploaded_data['weather_data'] = df
             
             # Data preview
-            st.markdown("### 👀 Data Preview")
+            st.markdown("### Data Preview")
             st.dataframe(df.head(10), use_container_width=True)
             
             if create_visualizations:
-                st.markdown("### 🎨 Weather Visualizations")
+                st.markdown("### Weather Visualizations")
                 
                 # Weather parameters correlation
                 if all(col in df.columns for col in ['temperature', 'pressure', 'wind_speed', 'humidity']):
@@ -396,13 +396,13 @@ elif upload_type == "Weather Data":
                         st.plotly_chart(fig_temp, use_container_width=True)
         
         except Exception as e:
-            st.error(f"❌ Error reading weather file: {str(e)}")
+            st.error(f"Error reading weather file: {str(e)}")
 
 elif upload_type == "Pilot Reports":
-    st.markdown("## 👨‍✈️ Pilot Reports Upload")
+    st.markdown("## Pilot Reports Upload")
     st.info("Upload pilot turbulence reports (PIREPs) for analysis and validation.")
     
-    with st.expander("📋 Required Data Format"):
+    with st.expander("Required Data Format"):
         st.markdown("""
         **Required Columns:**
         - `report_id`: Unique report identifier
@@ -437,15 +437,15 @@ elif upload_type == "Pilot Reports":
             else:
                 df = pd.read_json(uploaded_file)
             
-            st.success(f"✅ Successfully loaded {len(df)} pilot reports")
+            st.success(f"Successfully loaded {len(df)} pilot reports")
             st.session_state.uploaded_data['pilot_reports'] = df
             
             # Data preview
-            st.markdown("### 👀 Data Preview")
+            st.markdown("### Data Preview")
             st.dataframe(df.head(10), use_container_width=True)
             
             if generate_statistics:
-                st.markdown("### 📊 Report Analysis")
+                st.markdown("### Report Analysis")
                 
                 col1, col2 = st.columns(2)
                 
@@ -482,10 +482,10 @@ elif upload_type == "Pilot Reports":
                     st.plotly_chart(fig_alt_intensity, use_container_width=True)
         
         except Exception as e:
-            st.error(f"❌ Error reading pilot reports: {str(e)}")
+            st.error(f"Error reading pilot reports: {str(e)}")
 
 elif upload_type == "Custom Dataset":
-    st.markdown("## 🔧 Custom Dataset Upload")
+    st.markdown("## Custom Dataset Upload")
     st.info("Upload any custom turbulence-related dataset for analysis.")
     
     uploaded_file = st.file_uploader(
@@ -507,15 +507,15 @@ elif upload_type == "Custom Dataset":
                 # Try to read as CSV by default
                 df = pd.read_csv(uploaded_file)
             
-            st.success(f"✅ Successfully loaded {len(df)} records with {len(df.columns)} columns")
+            st.success(f"Successfully loaded {len(df)} records with {len(df.columns)} columns")
             st.session_state.uploaded_data['custom_dataset'] = df
             
             # Data preview
-            st.markdown("### 👀 Data Preview")
+            st.markdown("### Data Preview")
             st.dataframe(df.head(10), use_container_width=True)
             
             # Data info
-            st.markdown("### ℹ️ Dataset Information")
+            st.markdown("### Dataset Information")
             
             info_col1, info_col2 = st.columns(2)
             
@@ -534,7 +534,7 @@ elif upload_type == "Custom Dataset":
             
             # Basic analysis
             if create_visualizations:
-                st.markdown("### 🎨 Basic Visualizations")
+                st.markdown("### Basic Visualizations")
                 
                 # Select numeric columns for visualization
                 numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
@@ -563,17 +563,17 @@ elif upload_type == "Custom Dataset":
                     st.plotly_chart(fig_dist, use_container_width=True)
         
         except Exception as e:
-            st.error(f"❌ Error reading custom dataset: {str(e)}")
+            st.error(f"Error reading custom dataset: {str(e)}")
             st.info("Please ensure the file is in the correct format (CSV, Excel, or JSON)")
 
 # Data management section
-st.markdown("## 💾 Data Management")
+st.markdown("## Data Management")
 
 if st.session_state.uploaded_data:
-    st.markdown("### 📚 Uploaded Datasets")
+    st.markdown("### Uploaded Datasets")
     
     for data_type, data in st.session_state.uploaded_data.items():
-        with st.expander(f"📊 {data_type.replace('_', ' ').title()} ({len(data)} records)"):
+        with st.expander(f"{data_type.replace('_', ' ').title()} ({len(data)} records)"):
             col1, col2, col3 = st.columns(3)
             
             with col1:
@@ -584,7 +584,7 @@ if st.session_state.uploaded_data:
                 # Download processed data
                 csv_data = data.to_csv(index=False)
                 st.download_button(
-                    "📥 Download CSV",
+                    "Download CSV",
                     csv_data,
                     file_name=f"{data_type}_{datetime.now().strftime('%Y%m%d')}.csv",
                     mime="text/csv"
@@ -592,7 +592,7 @@ if st.session_state.uploaded_data:
             
             with col3:
                 # Remove dataset
-                if st.button(f"🗑️ Remove", key=f"remove_{data_type}"):
+                if st.button(f"Remove", key=f"remove_{data_type}"):
                     del st.session_state.uploaded_data[data_type]
                     st.rerun()
             
@@ -601,7 +601,7 @@ if st.session_state.uploaded_data:
 
 # Analysis tools
 if st.session_state.uploaded_data:
-    st.markdown("## 🔍 Advanced Analysis Tools")
+    st.markdown("## Advanced Analysis Tools")
     
     analysis_tool = st.selectbox(
         "Select Analysis Tool",
@@ -609,7 +609,7 @@ if st.session_state.uploaded_data:
     )
     
     if analysis_tool == "Data Comparison" and len(st.session_state.uploaded_data) >= 2:
-        st.markdown("### ⚖️ Dataset Comparison")
+        st.markdown("### Dataset Comparison")
         
         dataset_names = list(st.session_state.uploaded_data.keys())
         dataset1 = st.selectbox("First Dataset", dataset_names, key="comp1")
@@ -630,7 +630,7 @@ if st.session_state.uploaded_data:
             st.dataframe(comparison_df, use_container_width=True, hide_index=True)
     
     elif analysis_tool == "Quality Assessment":
-        st.markdown("### ✅ Data Quality Assessment")
+        st.markdown("### Data Quality Assessment")
         
         selected_dataset = st.selectbox(
             "Select Dataset for Quality Check",
@@ -678,7 +678,7 @@ else:
     st.info("Upload data files to begin analysis. Use the sidebar to select data type and format.")
 
 # Help section
-with st.expander("❓ Help & Documentation"):
+with st.expander("Help & Documentation"):
     st.markdown("""
     ## How to Use the Data Upload System
     

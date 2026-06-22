@@ -9,7 +9,7 @@ from utils.turbulence_calculator import turbulence_calc
 
 st.set_page_config(page_title="Airport Map", page_icon="🗺️", layout="wide")
 
-st.title("🗺️ Interactive Airport Map - Turbulence Risk Visualization")
+st.title("Interactive Airport Map - Turbulence Risk Visualization")
 st.markdown("Real-time turbulence conditions across major Indian airports")
 
 # Control panel
@@ -93,7 +93,7 @@ with col1:
                 airport_status_data.append(airport_status)
         
         st.session_state.airport_data = pd.DataFrame(airport_status_data)
-        st.success("Data updated successfully!")
+        st.success("Data updated successfully.")
 
     # Filter data based on risk level
     display_data = st.session_state.get('airport_data', pd.DataFrame())

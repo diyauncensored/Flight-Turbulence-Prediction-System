@@ -10,7 +10,7 @@ from datetime import datetime
 
 st.set_page_config(page_title="Deep Learning Prediction", page_icon="🧠", layout="wide")
 
-st.title("🧠 LSTM Deep Learning Turbulence Prediction")
+st.title("LSTM Deep Learning Turbulence Prediction")
 st.markdown("Advanced neural network model for high-accuracy turbulence forecasting")
 
 # Initialize systems
@@ -20,7 +20,7 @@ classifier = TurbulenceSeverityClassifier()
 # Check TensorFlow availability
 from utils.lstm_model import TF_AVAILABLE
 if not TF_AVAILABLE:
-    st.warning("⚠️ TensorFlow not available. Using fallback calculation method. Install TensorFlow for full LSTM functionality.")
+    st.warning("TensorFlow not available. Using fallback calculation method. Install TensorFlow for full LSTM functionality.")
 
 # Sidebar
 st.sidebar.header("Model Configuration")
@@ -40,7 +40,7 @@ altitude = st.sidebar.slider(
 )
 
 # Model info
-with st.sidebar.expander("ℹ️ About LSTM Model"):
+with st.sidebar.expander("About LSTM Model"):
     st.markdown("""
     **LSTM (Long Short-Term Memory)**
     
@@ -66,7 +66,7 @@ with tab1:
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        if st.button("🚀 Generate LSTM Prediction", type="primary", use_container_width=True):
+        if st.button("Generate LSTM Prediction", type="primary", use_container_width=True):
             with st.spinner("Running deep learning model..."):
                 try:
                     # Get current weather using lat/lon from airport data
@@ -90,11 +90,11 @@ with tab1:
                         st.session_state.lstm_weather = weather
                         st.session_state.lstm_airport = airport
                         
-                        st.success("✅ Prediction generated successfully!")
+                        st.success("Prediction generated successfully!")
                     else:
-                        st.error("❌ Could not fetch weather data. Please try again.")
+                        st.error("Could not fetch weather data. Please try again.")
                 except Exception as e:
-                    st.error(f"❌ Error generating prediction: {str(e)}")
+                    st.error(f"Error generating prediction: {str(e)}")
     
     with col2:
         st.markdown("**Current Conditions**")
@@ -219,7 +219,7 @@ with tab2:
         Training improves model accuracy over time.
         """)
     
-    if st.button("🎓 Train Model", type="primary"):
+    if st.button("Train Model", type="primary"):
         with st.spinner(f"Training LSTM model with {num_samples} samples..."):
             import time
             progress_bar = st.progress(0)
@@ -248,7 +248,7 @@ with tab2:
             progress_bar.progress(100)
             status_text.text("Training complete!")
             
-            st.success(f"✅ Model trained successfully with {num_samples} samples over {epochs} epochs")
+            st.success(f"Model trained successfully with {num_samples} samples over {epochs} epochs")
             
             # Display training results
             st.subheader("Training History")
@@ -364,7 +364,7 @@ with tab3:
     
     with col1:
         st.success("""
-        **✅ Strengths:**
+        **Strengths:**
         - Learns temporal patterns
         - Captures weather evolution
         - Provides uncertainty estimates
@@ -374,7 +374,7 @@ with tab3:
     
     with col2:
         st.warning("""
-        **⚠️ Considerations:**
+        **Considerations:**
         - Requires more training data
         - Longer training time
         - Higher computational cost

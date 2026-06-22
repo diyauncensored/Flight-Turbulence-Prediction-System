@@ -13,7 +13,7 @@ from utils.turbulence_calculator import turbulence_calc
 
 st.set_page_config(page_title="Statistical Dashboard", page_icon="📈", layout="wide")
 
-st.title("📈 Statistical Analysis Dashboard")
+st.title("Statistical Analysis Dashboard")
 st.markdown("Comprehensive turbulence statistics by airport, season, and altitude")
 
 # Sidebar controls
@@ -143,7 +143,7 @@ if stats_data.empty:
     st.stop()
 
 # Overview metrics
-st.markdown("## 📊 Overview Statistics")
+st.markdown("## Overview Statistics")
 
 col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -170,7 +170,7 @@ with col5:
 
 # Statistical Analysis by different groupings
 if "Airport" in grouping_options:
-    st.markdown("## 🏢 Statistics by Airport")
+    st.markdown("## Statistics by Airport")
     
     # Calculate statistics by airport
     airport_stats = stats_data.groupby('airport').agg({
@@ -230,7 +230,7 @@ if "Airport" in grouping_options:
         st.plotly_chart(fig_intensity, use_container_width=True)
     
     # Risk level distribution by airport
-    st.markdown("### ⚠️ Risk Level Distribution by Airport")
+    st.markdown("### Risk Level Distribution by Airport")
     
     risk_by_airport = stats_data.groupby(['airport', 'risk_level']).size().reset_index(name='count')
     risk_by_airport_pct = risk_by_airport.groupby('airport').apply(
@@ -250,7 +250,7 @@ if "Airport" in grouping_options:
     st.plotly_chart(fig_risk_airport, use_container_width=True)
 
 if "Season" in grouping_options:
-    st.markdown("## 🌡️ Statistics by Season")
+    st.markdown("## Statistics by Season")
     
     # Seasonal statistics
     seasonal_stats = stats_data.groupby('season').agg({
@@ -307,7 +307,7 @@ if "Season" in grouping_options:
         st.plotly_chart(fig_seasonal_intensity, use_container_width=True)
     
     # Monthly breakdown
-    st.markdown("### 📅 Monthly Turbulence Patterns")
+    st.markdown("### Monthly Turbulence Patterns")
     
     monthly_stats = stats_data.groupby(['month', 'season']).agg({
         'turbulence_intensity': ['count', 'mean']
@@ -346,7 +346,7 @@ if "Season" in grouping_options:
     st.plotly_chart(fig_monthly, width='stretch')
 
 if "Altitude Range" in grouping_options:
-    st.markdown("## ✈️ Statistics by Altitude Range")
+    st.markdown("## Statistics by Altitude Range")
     
     # Altitude statistics
     altitude_stats = stats_data.groupby('altitude_range').agg({
@@ -405,7 +405,7 @@ if "Altitude Range" in grouping_options:
         st.plotly_chart(fig_alt_box, use_container_width=True)
 
 if "Time of Day" in grouping_options:
-    st.markdown("## ⏰ Statistics by Time of Day")
+    st.markdown("## Statistics by Time of Day")
     
     # Time of day statistics
     time_stats = stats_data.groupby('time_of_day').agg({
@@ -470,7 +470,7 @@ if "Time of Day" in grouping_options:
         st.plotly_chart(fig_time_intensity, use_container_width=True)
 
 if "Day of Week" in grouping_options:
-    st.markdown("## 📅 Statistics by Day of Week")
+    st.markdown("## Statistics by Day of Week")
     
     # Day of week statistics
     day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -526,10 +526,10 @@ if "Day of Week" in grouping_options:
         st.plotly_chart(fig_weekend, use_container_width=True)
 
 # Advanced Statistical Analysis
-st.markdown("## 🔬 Advanced Statistical Analysis")
+st.markdown("## Advanced Statistical Analysis")
 
 # Correlation analysis
-st.markdown("### 📊 Correlation Analysis")
+st.markdown("### Correlation Analysis")
 
 # Select numeric columns for correlation
 numeric_cols = ['turbulence_intensity', 'temperature', 'pressure', 'wind_speed', 'humidity', 'altitude']
@@ -550,7 +550,7 @@ if len(available_cols) > 1:
     st.plotly_chart(fig_corr, use_container_width=True)
 
 # Statistical significance tests
-st.markdown("### 📈 Statistical Significance Analysis")
+st.markdown("### Statistical Significance Analysis")
 
 col1, col2 = st.columns(2)
 
@@ -563,26 +563,26 @@ with col1:
     # Airport with highest mean intensity
     if "Airport" in grouping_options and 'airport_stats' in locals():
         highest_intensity_airport = airport_stats.loc[airport_stats['Mean Intensity'].idxmax()]
-        insights.append(f"🏢 Highest average turbulence: {highest_intensity_airport['airport']} ({highest_intensity_airport['Mean Intensity']:.3f})")
+        insights.append(f"Highest average turbulence: {highest_intensity_airport['airport']} ({highest_intensity_airport['Mean Intensity']:.3f})")
     
     # Seasonal analysis
     if "Season" in grouping_options and 'seasonal_stats' in locals():
         peak_season = seasonal_stats.loc[seasonal_stats['Mean Intensity'].idxmax()]
-        insights.append(f"🌪️ Peak turbulence season: {peak_season['season']} ({peak_season['Mean Intensity']:.3f})")
+        insights.append(f"Peak turbulence season: {peak_season['season']} ({peak_season['Mean Intensity']:.3f})")
     
     # Altitude analysis
     if "Altitude Range" in grouping_options and 'altitude_stats' in locals():
         risky_altitude = altitude_stats.loc[altitude_stats['Mean Intensity'].idxmax()]
-        insights.append(f"✈️ Most turbulent altitude range: {risky_altitude['altitude_range']}")
+        insights.append(f"Most turbulent altitude range: {risky_altitude['altitude_range']}")
     
     # Overall statistics
     total_severe = len(stats_data[stats_data['turbulence_intensity'] >= 2.5])
     severe_percentage = (total_severe / len(stats_data)) * 100
-    insights.append(f"⚠️ Severe turbulence rate: {severe_percentage:.1f}% ({total_severe:,} incidents)")
+    insights.append(f"Severe turbulence rate: {severe_percentage:.1f}% ({total_severe:,} incidents)")
     
     # Standard deviation analysis
     std_dev = stats_data['turbulence_intensity'].std()
-    insights.append(f"📊 Turbulence variability (σ): {std_dev:.3f}")
+    insights.append(f"Turbulence variability (σ): {std_dev:.3f}")
     
     for insight in insights:
         st.info(insight)
@@ -602,12 +602,12 @@ with col2:
     st.plotly_chart(fig_dist, use_container_width=True)
 
 # Export functionality
-st.markdown("## 💾 Export Statistical Reports")
+st.markdown("## Export Statistical Reports")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("📊 Export Summary Statistics"):
+    if st.button("Export Summary Statistics"):
         # Create summary report
         summary_data = {
             'Metric': ['Total Reports', 'Average Intensity', 'Maximum Intensity', 'Standard Deviation', 'Severe Incidents (%)'],
@@ -630,7 +630,7 @@ with col1:
         )
 
 with col2:
-    if st.button("🏢 Export Airport Statistics"):
+    if st.button("Export Airport Statistics"):
         if 'airport_stats' in locals():
             csv_airport = airport_stats.to_csv(index=False)
             st.download_button(
@@ -641,7 +641,7 @@ with col2:
             )
 
 with col3:
-    if st.button("📅 Export Detailed Data"):
+    if st.button("Export Detailed Data"):
         # Export full dataset with all derived features
         export_columns = ['timestamp', 'airport', 'turbulence_intensity', 'altitude', 'season', 
                          'altitude_range', 'time_of_day', 'risk_level', 'temperature', 'wind_speed', 'pressure']
@@ -657,7 +657,7 @@ with col3:
         )
 
 # Key findings and recommendations
-st.markdown("## 💡 Key Findings & Recommendations")
+st.markdown("## Key Findings & Recommendations")
 
 findings = []
 
@@ -668,20 +668,20 @@ if len(stats_data) > 100:  # Sufficient data for meaningful analysis
     if "Season" in grouping_options and 'seasonal_stats' in locals():
         monsoon_intensity = seasonal_stats[seasonal_stats['season'] == 'Monsoon']['Mean Intensity'].iloc[0] if 'Monsoon' in seasonal_stats['season'].values else 0
         if monsoon_intensity > stats_data['turbulence_intensity'].mean():
-            findings.append("🌧️ **Monsoon Season Alert**: Significantly higher turbulence intensity during monsoon season")
+            findings.append("**Monsoon Season Alert**: Significantly higher turbulence intensity during monsoon season")
     
     # Airport-specific findings
     if "Airport" in grouping_options and 'airport_stats' in locals():
         high_freq_airports = airport_stats[airport_stats['Frequency'] > airport_stats['Frequency'].mean()]
         if len(high_freq_airports) > 0:
             airports_list = ", ".join(high_freq_airports['airport'].tolist())
-            findings.append(f"🏢 **High Activity Airports**: {airports_list} show above-average turbulence frequency")
+            findings.append(f"**High Activity Airports**: {airports_list} show above-average turbulence frequency")
     
     # Altitude findings
     if "Altitude Range" in grouping_options and 'altitude_stats' in locals():
         high_alt_risk = altitude_stats[altitude_stats['altitude_range'].str.contains('Very High|Extreme')]
         if not high_alt_risk.empty and high_alt_risk['Mean Intensity'].max() > 2.0:
-            findings.append("✈️ **High Altitude Risk**: Increased turbulence intensity at very high altitudes (>35,000 ft)")
+            findings.append("**High Altitude Risk**: Increased turbulence intensity at very high altitudes (>35,000 ft)")
     
     # Time-based findings
     severe_incidents = stats_data[stats_data['turbulence_intensity'] >= 2.5]
@@ -689,32 +689,32 @@ if len(stats_data) > 100:  # Sufficient data for meaningful analysis
         if 'time_of_day' in severe_incidents.columns:
             afternoon_severe = len(severe_incidents[severe_incidents['time_of_day'] == 'Afternoon'])
             if afternoon_severe / len(severe_incidents) > 0.4:
-                findings.append("☀️ **Afternoon Peak**: Higher concentration of severe turbulence during afternoon hours")
+                findings.append("**Afternoon Peak**: Higher concentration of severe turbulence during afternoon hours")
     
     # Overall safety assessment
     severe_rate = (len(stats_data[stats_data['turbulence_intensity'] >= 2.5]) / len(stats_data)) * 100
     if severe_rate > 10:
-        findings.append(f"⚠️ **Safety Alert**: High severe turbulence rate ({severe_rate:.1f}%) requires attention")
+        findings.append(f"**Safety Alert**: High severe turbulence rate ({severe_rate:.1f}%) requires attention")
     elif severe_rate < 2:
-        findings.append(f"✅ **Good Safety Record**: Low severe turbulence rate ({severe_rate:.1f}%)")
+        findings.append(f"**Good Safety Record**: Low severe turbulence rate ({severe_rate:.1f}%)")
 
 else:
-    findings.append("📊 **Insufficient Data**: More data points needed for comprehensive statistical analysis")
+    findings.append("**Insufficient Data**: More data points needed for comprehensive statistical analysis")
 
 # Display findings
 if findings:
     for finding in findings:
-        if "Alert" in finding or "⚠️" in finding:
+        if "Alert" in finding:
             st.warning(finding)
-        elif "✅" in finding or "Good" in finding:
+        elif "Good" in finding:
             st.success(finding)
         else:
             st.info(finding)
 else:
-    st.info("📈 **Analysis Complete**: Review the statistics above for detailed insights into turbulence patterns")
+    st.info("**Analysis Complete**: Review the statistics above for detailed insights into turbulence patterns")
 
 # Methodology note
-with st.expander("📚 Statistical Methodology"):
+with st.expander("Statistical Methodology"):
     st.markdown("""
     ## Statistical Methods Used
     

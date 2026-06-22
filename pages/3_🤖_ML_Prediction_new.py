@@ -13,14 +13,14 @@ from datetime import datetime
 
 st.set_page_config(page_title="ML Prediction", page_icon="🤖", layout="wide")
 
-st.title("🤖 Machine Learning Turbulence Prediction")
+st.title("Machine Learning Turbulence Prediction")
 st.markdown("Advanced AI-powered turbulence forecasting using multiple ML models")
 
 # Initialize the turbulence predictor
 predictor = TurbulencePredictor()
 
 # Add a section for model training
-st.markdown("## 🎯 Model Training and Performance")
+st.markdown("## Model Training and Performance")
 
 # Create training progress section
 training_container = st.container()
@@ -29,8 +29,8 @@ with training_container:
     train_col1, train_col2 = st.columns([1, 2])
 
     with train_col1:
-        st.markdown("### 🔄 Train Models")
-        if st.button("🚀 Train/Retrain Models", type="primary", key="train_button"):
+        st.markdown("### Train Models")
+        if st.button("Train/Retrain Models", type="primary", key="train_button"):
             with st.spinner("Training models in progress..."):
                 # Create a placeholder for training progress
                 progress_placeholder = st.empty()
@@ -56,13 +56,13 @@ with training_container:
                     {training_log}
                     ```
                     """)
-                    st.success("✅ Training completed successfully!")
+                    st.success("Training completed successfully.")
                 except Exception as e:
                     sys.stdout = old_stdout
-                    st.error(f"❌ Training failed: {str(e)}")
+                    st.error(f"Training failed: {str(e)}")
 
     with train_col2:
-        st.markdown("### ℹ️ Training Information")
+        st.markdown("### Training Information")
         st.info("""
         **Model Training Process:**
         1. Generates synthetic training data
@@ -81,14 +81,14 @@ with training_container:
 performance_container = st.container()
 
 with performance_container:
-    st.markdown("## 📊 Model Performance Metrics")
+    st.markdown("## Model Performance Metrics")
     accuracies = predictor.get_model_accuracies()
     
     if accuracies:
         metrics_col1, metrics_col2 = st.columns(2)
         
         with metrics_col1:
-            st.info("🌲 Random Forest Model")
+            st.info("Random Forest Model")
             st.metric(
                 "Accuracy",
                 f"{accuracies['random_forest']['accuracy']:.2f}%",
@@ -106,7 +106,7 @@ with performance_container:
             )
         
         with metrics_col2:
-            st.info("🚀 Gradient Boosting Model")
+            st.info("Gradient Boosting Model")
             st.metric(
                 "Accuracy",
                 f"{accuracies['gradient_boosting']['accuracy']:.2f}%",
@@ -124,7 +124,7 @@ with performance_container:
             )
         
         # Add performance comparison visualization
-        st.markdown("### 📈 Performance Comparison")
+        st.markdown("### Performance Comparison")
         
         # Create comparison dataframe
         comparison_data = pd.DataFrame({
@@ -207,9 +207,9 @@ with st.sidebar.expander("Advanced Parameters"):
 pred_col1, pred_col2 = st.columns([2, 1])
 
 with pred_col1:
-    st.markdown("## 🎯 Turbulence Prediction Results")
+    st.markdown("## Turbulence Prediction Results")
     
-    if st.button("🚀 Generate Predictions", type="primary", key="predict_button"):
+    if st.button("Generate Predictions", type="primary", key="predict_button"):
         with st.spinner("Running ML models and generating predictions..."):
             # Get weather data
             airport_info = INDIAN_AIRPORTS[selected_airport]
@@ -270,11 +270,11 @@ with pred_col1:
                     }
                     st.session_state.selected_airport = selected_airport
                     
-                    st.success("✅ Predictions generated successfully!")
+                    st.success("Predictions generated successfully.")
                 except Exception as e:
-                    st.error(f"❌ Error generating predictions: {str(e)}")
+                    st.error(f"Error generating predictions: {str(e)}")
             else:
-                st.error("❌ Could not fetch weather data. Please try again or use custom weather data.")
+                st.error("Could not fetch weather data. Please try again or use custom weather data.")
 
 # Display predictions if available
 if 'predictions' in st.session_state:
@@ -334,7 +334,7 @@ if 'predictions' in st.session_state:
 
     # Show detailed predictions for selected models
     if len(selected_models) > 1:
-        st.markdown("### 📊 Model Predictions")
+        st.markdown("### Model Predictions")
         
         model_results = []
         for model in selected_models:
@@ -379,7 +379,7 @@ if 'predictions' in st.session_state:
 with pred_col2:
     if 'predictions' in st.session_state:
         # Feature importance
-        st.markdown("### 🎯 Feature Importance")
+        st.markdown("### Feature Importance")
         feature_importance = predictor.get_feature_importance()
         if feature_importance is not None:
             fig = px.bar(
@@ -393,7 +393,7 @@ with pred_col2:
             st.plotly_chart(fig, use_container_width=True)
         
         # Current weather summary
-        st.markdown("### 🌤️ Current Conditions")
+        st.markdown("### Current Conditions")
         weather = st.session_state.weather_data
         airport_code = st.session_state.selected_airport
         
@@ -411,7 +411,7 @@ with pred_col2:
             st.text(f"{label}: {value}")
         
         # Flight parameters
-        st.markdown("### ✈️ Flight Parameters")
+        st.markdown("### Flight Parameters")
         flight_info = st.session_state.flight_params
         
         st.text(f"Altitude: {flight_info['altitude']:,} ft")

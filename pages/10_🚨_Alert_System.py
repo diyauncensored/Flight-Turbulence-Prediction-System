@@ -7,7 +7,7 @@ from utils.airport_data import get_airports
 
 st.set_page_config(page_title="Alert System", page_icon="🚨", layout="wide")
 
-st.title("🚨 Automated Turbulence Alert System")
+st.title("Automated Turbulence Alert System")
 st.markdown("Real-time monitoring and automated alerts for turbulence conditions")
 
 # Initialize systems
@@ -24,11 +24,11 @@ with tab1:
     col1, col2, col3 = st.columns([1, 1, 3])
     
     with col1:
-        if st.button("🔄 Refresh Alerts", use_container_width=True):
+        if st.button("Refresh Alerts", use_container_width=True):
             st.rerun()
     
     with col2:
-        if st.button("🗑️ Clear Expired", use_container_width=True):
+        if st.button("Clear Expired", use_container_width=True):
             deactivated = alert_system.deactivate_expired_alerts()
             st.success(f"Deactivated {deactivated} expired alerts")
             st.rerun()
@@ -53,13 +53,13 @@ with tab1:
         st.metric("Total Active Alerts", summary['total_alerts'])
     
     with col2:
-        st.metric("🔴 Severe", summary['severe_count'])
+        st.metric("Severe", summary['severe_count'])
     
     with col3:
-        st.metric("🟠 Moderate", summary['moderate_count'])
+        st.metric("Moderate", summary['moderate_count'])
     
     with col4:
-        st.metric("🟡 Advisory", summary['advisory_count'])
+        st.metric("Advisory", summary['advisory_count'])
     
     # Display alerts
     if summary['alerts']:
@@ -107,7 +107,7 @@ with tab1:
                 
                 st.markdown("</div>", unsafe_allow_html=True)
     else:
-        st.info("✅ No active alerts at this time")
+        st.info("No active alerts at this time")
     
     # Airports affected
     if summary['airports_affected']:
@@ -130,14 +130,14 @@ with tab2:
     with col2:
         st.write("")
         st.write("")
-        if st.button("🔍 Scan & Generate Alerts", type="primary", use_container_width=True):
+        if st.button("Scan & Generate Alerts", type="primary", use_container_width=True):
             with st.spinner("Scanning conditions and generating alerts..."):
                 scan_code = airport_names.get(scan_airport) if scan_airport != "All Airports" else None
                 
                 new_alerts = alert_system.check_and_create_alerts(airport_code=scan_code)
                 
                 if new_alerts:
-                    st.success(f"✅ Generated {len(new_alerts)} new alert(s)")
+                    st.success(f"Generated {len(new_alerts)} new alert(s)")
                     
                     # Display new alerts
                     for alert in new_alerts:
@@ -189,7 +189,7 @@ with tab3:
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.subheader("🔴 Severe Alert")
+        st.subheader("Severe Alert")
         severe_level = st.slider(
             "Min Turbulence Level",
             min_value=0.0,
@@ -209,10 +209,10 @@ with tab3:
         
         if st.button("Update Severe", key="update_severe"):
             if alert_system.update_alert_thresholds('severe', severe_level, severe_conf):
-                st.success("✅ Updated")
+                st.success("Updated")
     
     with col2:
-        st.subheader("🟠 Moderate Alert")
+        st.subheader("Moderate Alert")
         moderate_level = st.slider(
             "Min Turbulence Level",
             min_value=0.0,
@@ -232,10 +232,10 @@ with tab3:
         
         if st.button("Update Moderate", key="update_moderate"):
             if alert_system.update_alert_thresholds('moderate', moderate_level, moderate_conf):
-                st.success("✅ Updated")
+                st.success("Updated")
     
     with col3:
-        st.subheader("🟡 Advisory Alert")
+        st.subheader("Advisory Alert")
         light_level = st.slider(
             "Min Turbulence Level",
             min_value=0.0,
@@ -255,24 +255,24 @@ with tab3:
         
         if st.button("Update Advisory", key="update_light"):
             if alert_system.update_alert_thresholds('light', light_level, light_conf):
-                st.success("✅ Updated")
+                st.success("Updated")
     
     st.markdown("---")
     st.subheader("Current Threshold Settings")
     
     threshold_df = pd.DataFrame([
         {
-            'Alert Type': '🔴 Severe',
+            'Alert Type': 'Severe',
             'Min Level': alert_system.thresholds['severe']['min_level'],
             'Min Confidence': f"{alert_system.thresholds['severe']['min_confidence']*100:.0f}%"
         },
         {
-            'Alert Type': '🟠 Moderate',
+            'Alert Type': 'Moderate',
             'Min Level': alert_system.thresholds['moderate']['min_level'],
             'Min Confidence': f"{alert_system.thresholds['moderate']['min_confidence']*100:.0f}%"
         },
         {
-            'Alert Type': '🟡 Advisory',
+            'Alert Type': 'Advisory',
             'Min Level': alert_system.thresholds['light']['min_level'],
             'Min Confidence': f"{alert_system.thresholds['light']['min_confidence']*100:.0f}%"
         }

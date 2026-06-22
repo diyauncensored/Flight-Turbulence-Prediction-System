@@ -11,7 +11,7 @@ from utils.turbulence_calculator import turbulence_calc
 
 st.set_page_config(page_title="Atmospheric Visualization", page_icon="🌬️", layout="wide")
 
-st.title("🌬️ Atmospheric Data Visualization")
+st.title("Atmospheric Data Visualization")
 st.markdown("Wind patterns, pressure systems, and atmospheric analysis")
 
 # Sidebar controls
@@ -119,7 +119,7 @@ def simulate_atmospheric_profile(airport_code, altitudes):
 
 # Main visualization logic
 if viz_type == "Wind Patterns":
-    st.markdown("## 💨 Wind Pattern Analysis")
+    st.markdown("## Wind Pattern Analysis")
     
     if not altitude_levels:
         st.warning("Please select at least one altitude level.")
@@ -159,7 +159,7 @@ if viz_type == "Wind Patterns":
         st.plotly_chart(fig_wind_dir, use_container_width=True)
         
         # Wind barbs visualization
-        st.markdown("### 🎯 Wind Barbs by Altitude")
+        st.markdown("### Wind Barbs by Altitude")
         
         fig_barbs = go.Figure()
         
@@ -194,7 +194,7 @@ if viz_type == "Wind Patterns":
         
         # Turbulence potential analysis
         if show_turbulence_overlay:
-            st.markdown("### 🌪️ Wind Shear and Turbulence Potential")
+            st.markdown("### Wind Shear and Turbulence Potential")
             
             # Calculate wind shear between levels
             shear_data = []
@@ -268,7 +268,7 @@ if viz_type == "Wind Patterns":
                 st.plotly_chart(fig_shear, use_container_width=True)
 
 elif viz_type == "Pressure Systems":
-    st.markdown("## 🌀 Pressure System Analysis")
+    st.markdown("## Pressure System Analysis")
     
     airport_info = INDIAN_AIRPORTS[selected_airport]
     
@@ -341,7 +341,7 @@ elif viz_type == "Pressure Systems":
             st.plotly_chart(fig_pressure, use_container_width=True)
         
         with col2:
-            st.markdown("### 📊 Pressure Metrics")
+            st.markdown("### Pressure Metrics")
             
             st.metric("Surface Pressure", f"{current_weather['pressure']:.1f} hPa")
             
@@ -372,19 +372,19 @@ elif viz_type == "Pressure Systems":
             )
             
             # Weather implications
-            st.markdown("### 🌤️ Weather Implications")
+            st.markdown("### Weather Implications")
             
             if current_weather['pressure'] < 1010:
-                st.warning("⚠️ Low pressure system - increased turbulence risk")
-                st.info("💡 Expect: Unstable conditions, possible precipitation")
+                st.warning("Low pressure system - increased turbulence risk")
+                st.info("Expect: Unstable conditions, possible precipitation")
             elif current_weather['pressure'] > 1020:
-                st.success("✅ High pressure system - stable conditions")
-                st.info("💡 Expect: Clear skies, low turbulence risk")
+                st.success("High pressure system - stable conditions")
+                st.info("Expect: Clear skies, low turbulence risk")
             else:
-                st.info("🟡 Moderate pressure conditions")
+                st.info("Moderate pressure conditions")
 
 elif viz_type == "Atmospheric Stability":
-    st.markdown("## 🌡️ Atmospheric Stability Analysis")
+    st.markdown("## Atmospheric Stability Analysis")
     
     airport_info = INDIAN_AIRPORTS[selected_airport]
     
@@ -399,7 +399,7 @@ elif viz_type == "Atmospheric Stability":
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("### 📊 Stability Metrics")
+            st.markdown("### Stability Metrics")
             
             st.metric("Temperature", f"{atmospheric_data['temperature']:.1f}°C")
             st.metric("Pressure", f"{atmospheric_data['pressure']:.1f} hPa")
@@ -415,19 +415,19 @@ elif viz_type == "Atmospheric Stability":
             st.info(f"**Wind Shear Potential:** {shear_potential}")
         
         with col2:
-            st.markdown("### 🎯 Turbulence Assessment")
+            st.markdown("### Turbulence Assessment")
             
             # Turbulence indicator
             turb_indicator = atmospheric_data.get('turbulence_indicator', 'Unknown')
             
             if turb_indicator == 'Severe':
-                st.error(f"🔴 **Turbulence Risk:** {turb_indicator}")
+                st.error(f"**Turbulence Risk:** {turb_indicator}")
             elif turb_indicator == 'High':
-                st.warning(f"🟠 **Turbulence Risk:** {turb_indicator}")
+                st.warning(f"**Turbulence Risk:** {turb_indicator}")
             elif turb_indicator == 'Moderate':
-                st.info(f"🟡 **Turbulence Risk:** {turb_indicator}")
+                st.info(f"**Turbulence Risk:** {turb_indicator}")
             else:
-                st.success(f"🟢 **Turbulence Risk:** {turb_indicator}")
+                st.success(f"**Turbulence Risk:** {turb_indicator}")
             
             # Richardson Number simulation
             # (Simplified calculation for demonstration)
@@ -442,11 +442,11 @@ elif viz_type == "Atmospheric Stability":
             st.metric("Richardson Number", f"{richardson_number:.2f}")
             
             if richardson_number < 0.25:
-                st.error("⚠️ **Unstable conditions** - High turbulence risk")
+                st.error("**Unstable conditions** - High turbulence risk")
             elif richardson_number < 1.0:
-                st.warning("🟡 **Marginally stable** - Moderate turbulence risk")
+                st.warning("**Marginally stable** - Moderate turbulence risk")
             else:
-                st.success("✅ **Stable conditions** - Low turbulence risk")
+                st.success("**Stable conditions** - Low turbulence risk")
         
         # Atmospheric profile visualization
         if altitude_levels:
@@ -479,7 +479,7 @@ elif viz_type == "Atmospheric Stability":
                 st.plotly_chart(fig_temp_profile, use_container_width=True)
 
 elif viz_type == "3D Atmospheric Model":
-    st.markdown("## 🌐 3D Atmospheric Model")
+    st.markdown("## 3D Atmospheric Model")
     
     airport_info = INDIAN_AIRPORTS[selected_airport]
     
@@ -525,7 +525,7 @@ elif viz_type == "3D Atmospheric Model":
             st.plotly_chart(fig_3d, use_container_width=True)
             
             # 3D wind field visualization
-            st.markdown("### 💨 3D Wind Field")
+            st.markdown("### 3D Wind Field")
             
             # Create wind vector visualization
             fig_wind_3d = go.Figure()
@@ -560,7 +560,7 @@ elif viz_type == "3D Atmospheric Model":
             st.plotly_chart(fig_wind_3d, use_container_width=True)
 
 elif viz_type == "Regional Weather Map":
-    st.markdown("## 🗺️ Regional Weather Patterns")
+    st.markdown("## Regional Weather Patterns")
     
     # Define region boundaries
     region_coords = {
@@ -649,7 +649,7 @@ elif viz_type == "Regional Weather Map":
         st.plotly_chart(fig_wind_map, use_container_width=True)
         
         # Regional statistics
-        st.markdown("### 📊 Regional Weather Statistics")
+        st.markdown("### Regional Weather Statistics")
         
         stats_col1, stats_col2, stats_col3, stats_col4 = st.columns(4)
         
@@ -672,35 +672,35 @@ elif viz_type == "Regional Weather Map":
         st.warning("No weather data available for the selected region.")
 
 # Analysis summary
-st.markdown("## 📋 Analysis Summary")
+st.markdown("## Analysis Summary")
 
 summary_points = []
 
 if viz_type == "Wind Patterns" and 'profile_df' in locals() and not profile_df.empty:
     max_wind = profile_df['wind_speed'].max()
     max_wind_alt = profile_df.loc[profile_df['wind_speed'].idxmax(), 'altitude']
-    summary_points.append(f"🌪️ Maximum wind speed: {max_wind:.1f} m/s at {max_wind_alt:,.0f} ft")
+    summary_points.append(f"Maximum wind speed: {max_wind:.1f} m/s at {max_wind_alt:,.0f} ft")
     
     if max_wind > 25:
-        summary_points.append("⚠️ Strong winds detected - increased turbulence risk")
+        summary_points.append("Strong winds detected - increased turbulence risk")
 
 elif viz_type == "Pressure Systems" and 'current_weather' in locals():
     pressure = current_weather['pressure']
     if pressure < 1010:
-        summary_points.append("🌀 Low pressure system detected - monitor for weather changes")
+        summary_points.append("Low pressure system detected - monitor for weather changes")
     elif pressure > 1020:
-        summary_points.append("🌤️ High pressure system - generally stable conditions")
+        summary_points.append("High pressure system - generally stable conditions")
 
 elif viz_type == "Regional Weather Map" and 'regional_df' in locals():
     temp_range = regional_df['temperature'].max() - regional_df['temperature'].min()
-    summary_points.append(f"🌡️ Temperature variation across region: {temp_range:.1f}°C")
+    summary_points.append(f"Temperature variation across region: {temp_range:.1f}°C")
     
     strong_wind_airports = regional_df[regional_df['wind_speed'] > 15]['airport'].tolist()
     if strong_wind_airports:
-        summary_points.append(f"💨 Strong winds detected at: {', '.join(strong_wind_airports)}")
+        summary_points.append(f"Strong winds detected at: {', '.join(strong_wind_airports)}")
 
 if not summary_points:
-    summary_points.append("✅ Analysis completed - check visualizations above for detailed insights")
+    summary_points.append("Analysis completed - check visualizations above for detailed insights")
 
 for point in summary_points:
     st.info(point)

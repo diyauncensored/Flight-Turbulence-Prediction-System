@@ -6,7 +6,7 @@ from utils.severity_classification import TurbulenceSeverityClassifier
 
 st.set_page_config(page_title="Severity Classification", page_icon="📊", layout="wide")
 
-st.title("📊 Enhanced Turbulence Severity Classification")
+st.title("Enhanced Turbulence Severity Classification")
 st.markdown("Detailed turbulence intensity levels with comprehensive risk assessment")
 
 # Initialize classifier
@@ -279,11 +279,11 @@ with tab4:
     
     with col_c:
         if index_b > index_a:
-            st.error("⬆️ Condition worsening")
+            st.error("Condition worsening")
         elif index_b < index_a:
-            st.success("⬇️ Condition improving")
+            st.success("Condition improving")
         else:
-            st.info("➡️ Condition stable")
+            st.info("Condition stable")
 
 st.markdown("---")
 st.caption("Enhanced classification system provides detailed turbulence analysis for better decision-making")

@@ -14,7 +14,7 @@ from utils.data_processing import data_processor
 
 st.set_page_config(page_title="Real-Time Prediction", page_icon="⚡", layout="wide")
 
-st.title("⚡ Real-Time Turbulence Prediction System")
+st.title("Real-Time Turbulence Prediction System")
 st.markdown("Live turbulence monitoring and prediction with confidence scoring")
 
 # Initialize session state
@@ -64,13 +64,13 @@ if not monitored_airports:
 header_col1, header_col2, header_col3 = st.columns([2, 1, 1])
 
 with header_col1:
-    st.markdown("## 🎯 Current Turbulence Status")
+    st.markdown("## Current Turbulence Status")
 
 with header_col2:
     last_update = st.empty()
 
 with header_col3:
-    refresh_button = st.button("🔄 Refresh Now", type="primary")
+    refresh_button = st.button("Refresh Now", type="primary")
 
 # Real-time data fetching function
 def fetch_real_time_data():
@@ -199,7 +199,7 @@ if 'last_refresh' in st.session_state:
 if st.session_state.real_time_data:
     
     # Current status cards
-    st.markdown("### 📊 Current Airport Status")
+    st.markdown("### Current Airport Status")
     
     cols = st.columns(len(monitored_airports))
     
@@ -247,7 +247,7 @@ if st.session_state.real_time_data:
     
     # Real-time trends
     if len(st.session_state.prediction_log) > 1:
-        st.markdown("## 📈 Real-Time Trends")
+        st.markdown("## Real-Time Trends")
         
         # Convert log to DataFrame
         log_df = pd.DataFrame(st.session_state.prediction_log)
@@ -288,7 +288,7 @@ if st.session_state.real_time_data:
             st.plotly_chart(fig_confidence, use_container_width=True)
         
         # Multi-parameter dashboard
-        st.markdown("### 🌤️ Multi-Parameter Real-Time Dashboard")
+        st.markdown("### Multi-Parameter Real-Time Dashboard")
         
         # Create subplots
         subplot_fig = make_subplots(
@@ -349,7 +349,7 @@ if st.session_state.real_time_data:
         st.plotly_chart(subplot_fig, use_container_width=True)
 
 # Alerts section
-st.markdown("## ⚠️ Recent Alerts")
+st.markdown("## Recent Alerts")
 
 if st.session_state.alerts:
     # Show recent alerts
@@ -400,15 +400,15 @@ if st.session_state.alerts:
             st.plotly_chart(fig_airport_alerts, use_container_width=True)
     
     # Clear alerts button
-    if st.button("🗑️ Clear All Alerts"):
+    if st.button("Clear All Alerts"):
         st.session_state.alerts = []
         st.rerun()
 
 else:
-    st.success("✅ No recent alerts - All airports operating within normal parameters")
+    st.success("No recent alerts - All airports operating within normal parameters")
 
 # System status
-st.markdown("## 🖥️ System Status")
+st.markdown("## System Status")
 
 status_col1, status_col2, status_col3, status_col4 = st.columns(4)
 
@@ -430,7 +430,7 @@ with status_col4:
 
 # Performance metrics
 if st.session_state.prediction_log:
-    st.markdown("### 📊 Performance Metrics")
+    st.markdown("### Performance Metrics")
     
     perf_col1, perf_col2, perf_col3 = st.columns(3)
     
@@ -450,12 +450,12 @@ if st.session_state.prediction_log:
         st.metric("Total Alerts", total_alerts)
 
 # Data export
-st.markdown("## 💾 Export Real-Time Data")
+st.markdown("## Export Real-Time Data")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("📊 Export Current Data") and st.session_state.real_time_data:
+    if st.button("Export Current Data") and st.session_state.real_time_data:
         current_df = pd.DataFrame(st.session_state.real_time_data)
         csv_data = current_df.to_csv(index=False)
         
@@ -467,7 +467,7 @@ with col1:
         )
 
 with col2:
-    if st.button("📈 Export Prediction Log") and st.session_state.prediction_log:
+    if st.button("Export Prediction Log") and st.session_state.prediction_log:
         log_df = pd.DataFrame(st.session_state.prediction_log)
         csv_log = log_df.to_csv(index=False)
         
