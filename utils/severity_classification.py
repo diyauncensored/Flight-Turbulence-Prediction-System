@@ -97,7 +97,7 @@ class TurbulenceSeverityClassifier:
         }
     
     @st.cache_data(ttl=300)  # Cache results for 5 minutes
-    def calculate_turbulence_index(self, weather_params):
+    def calculate_turbulence_index(_self, weather_params):
         """Calculate turbulence index from weather parameters with enhanced accuracy"""
         
         try:
@@ -181,7 +181,7 @@ class TurbulenceSeverityClassifier:
         )))
         
         # Store confidence score for later use
-        self._last_confidence = confidence_score
+        _self._last_confidence = confidence_score
         
         # Clamp to 0-10 range
         turbulence_index = max(0, min(10, turbulence_index))
