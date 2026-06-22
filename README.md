@@ -22,6 +22,8 @@ streamlit run app.py
 
 The app will open automatically in your default web browser at `http://localhost:8501`
 
+deployed on streamlit: https://diyauncensored-flight-turbulence-prediction-system-app-yzch9k.streamlit.app/
+
 ## Features
 
 - Airport Map
