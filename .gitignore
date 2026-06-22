@@ -23,7 +23,11 @@ wheels/
 
 # Virtual Environment
 venv/
+.venv/
 ENV/
+
+# Lock files (platform-specific)
+uv.lock
 
 # Environment Variables
 .env
