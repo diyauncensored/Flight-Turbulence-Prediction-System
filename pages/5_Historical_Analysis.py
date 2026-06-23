@@ -9,6 +9,7 @@ from utils.airport_data import INDIAN_AIRPORTS
 from utils.data_processing import data_processor
 from utils.ml_models import turbulence_model
 from utils.turbulence_calculator import turbulence_calc
+from utils.database import TurbulenceDatabase
 
 st.set_page_config(page_title="Historical Analysis", page_icon="📊", layout="wide")
 
@@ -64,6 +65,32 @@ if not selected_airports:
 @st.cache_data(ttl=3600)
 def load_historical_data(airports, days):
     """Load historical turbulence data for selected airports"""
+    db = TurbulenceDatabase()
+    db_encounters = db.get_turbulence_encounters(airports=airports, days=days)
+    
+    if db_encounters:
+        df = pd.DataFrame(db_encounters)
+        
+        # Map database columns to expected dataframe schema
+        df['timestamp'] = pd.to_datetime(df['encounter_date'])
+        # Use origin_airport as primary airport reference
+        df['airport'] = df['origin_airport']
+        
+        # Map weather and other columns
+        df['temperature'] = df['weather_temperature'].fillna(25.0)
+        df['pressure'] = df['weather_pressure'].fillna(1013.0)
+        df['humidity'] = 50.0  # Default as not in schema
+        df['wind_speed'] = df['weather_wind_speed'].fillna(0.0)
+        df['weather_condition'] = df.get('turbulence_type', 'clear')
+        df['visibility'] = 10000.0  # Default
+        
+        # Drop rows missing critical mapped info if any
+        df = df.dropna(subset=['timestamp', 'airport'])
+        
+        if not df.empty:
+            return df
+            
+    # Fallback to generated sample data
     all_data = []
     
     for airport in airports:

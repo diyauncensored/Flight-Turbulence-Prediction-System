@@ -4,9 +4,19 @@ from utils.airport_data import INDIAN_AIRPORTS
 import plotly.express as px
 from dotenv import load_dotenv
 import os
+from utils.database import TurbulenceDatabase
 
 # Load environment variables
 load_dotenv()
+
+# Initialize Database Schema (if connected to Postgres)
+try:
+    db = TurbulenceDatabase()
+    if not db.demo_mode:
+        db.initialize_schema()
+except Exception:
+    pass
+
 
 # Configure the page
 st.set_page_config(

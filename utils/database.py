@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import streamlit as st
 
 class TurbulenceDatabase:
@@ -352,6 +352,18 @@ class TurbulenceDatabase:
     
     def add_turbulence_encounter(self, encounter_data):
         """Add turbulence encounter for historical data"""
+        if self.demo_mode:
+            encounter_id = st.session_state.demo_id_counter
+            st.session_state.demo_id_counter += 1
+            
+            encounter = {
+                'id': encounter_id,
+                'created_at': datetime.now(),
+                **encounter_data
+            }
+            st.session_state.demo_encounters.append(encounter)
+            return encounter_id
+            
         conn = self.get_connection()
         if not conn:
             return False
@@ -395,8 +407,110 @@ class TurbulenceDatabase:
                 conn.close()
             return None
     
+    def get_turbulence_encounters(self, airports=None, days=30):
+        """Get historical turbulence encounters"""
+        if self.demo_mode:
+            encounters = st.session_state.demo_encounters
+            cutoff_date = datetime.now() - timedelta(days=days)
+            
+            valid_encounters = []
+            for e in encounters:
+                e_date = e.get('encounter_date')
+                if isinstance(e_date, datetime):
+                    if e_date >= cutoff_date:
+                        valid_encounters.append(e)
+                elif e_date:
+                    if hasattr(e_date, 'date'):
+                        if e_date >= cutoff_date.date():
+                            valid_encounters.append(e)
+            
+            if airports:
+                valid_encounters = [e for e in valid_encounters if e.get('origin_airport') in airports or e.get('destination_airport') in airports]
+                
+            return valid_encounters
+            
+        conn = self.get_connection()
+        if not conn:
+            return []
+            
+        try:
+            cursor = conn.cursor()
+            
+            query = "SELECT * FROM turbulence_encounters WHERE encounter_date >= CURRENT_TIMESTAMP - INTERVAL '%s days'"
+            params = [days]
+            
+            if airports:
+                # Add origin_airport or destination_airport filtering
+                placeholders = ','.join(['%s'] * len(airports))
+                query += f" AND (origin_airport IN ({placeholders}) OR destination_airport IN ({placeholders}))"
+                params.extend(airports)
+                params.extend(airports)
+                
+            query += " ORDER BY encounter_date DESC"
+            
+            cursor.execute(query, params)
+            encounters = cursor.fetchall()
+            
+            cursor.close()
+            conn.close()
+            return encounters
+            
+        except Exception as e:
+            st.error(f"Error fetching encounters: {str(e)}")
+            if conn:
+                conn.close()
+            return []
+    
     def get_turbulence_statistics(self, airport_code=None, days=30):
         """Get turbulence statistics for analysis"""
+        if self.demo_mode:
+            reports = st.session_state.demo_pilot_reports
+            cutoff_date = datetime.now() - timedelta(days=days)
+            
+            valid_reports = []
+            for r in reports:
+                r_date = r.get('report_date')
+                if isinstance(r_date, datetime):
+                    if r_date >= cutoff_date:
+                        valid_reports.append(r)
+                elif r_date: # fallback if it's a date object
+                    if hasattr(r_date, 'date'):
+                        if r_date >= cutoff_date.date():
+                            valid_reports.append(r)
+            
+            if airport_code:
+                valid_reports = [r for r in valid_reports if r.get('airport_code') == airport_code]
+            
+            severity_counts = {}
+            for r in valid_reports:
+                lvl = r.get('turbulence_level')
+                if lvl:
+                    severity_counts[lvl] = severity_counts.get(lvl, 0) + 1
+            
+            alt_groups = {}
+            for r in valid_reports:
+                alt = r.get('altitude')
+                sev = r.get('severity_index')
+                if alt is not None and sev is not None:
+                    alt_range = (alt // 5000) * 5000
+                    if alt_range not in alt_groups:
+                        alt_groups[alt_range] = {'sum': 0.0, 'count': 0}
+                    alt_groups[alt_range]['sum'] += sev
+                    alt_groups[alt_range]['count'] += 1
+                    
+            altitude_stats = []
+            for alt_range, data in sorted(alt_groups.items()):
+                altitude_stats.append({
+                    'altitude_range': alt_range,
+                    'avg_severity': data['sum'] / data['count'],
+                    'count': data['count']
+                })
+            
+            return {
+                'severity_counts': severity_counts,
+                'altitude_stats': altitude_stats
+            }
+
         conn = self.get_connection()
         if not conn:
             return {}
