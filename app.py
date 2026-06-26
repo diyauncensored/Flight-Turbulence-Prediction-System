@@ -26,6 +26,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+if db.demo_mode and db.connection_error:
+    st.warning("Database unavailable. Running in demo mode until the configured DATABASE_URL can be reached.")
+
 # Main page
 st.title("Flight Turbulence Prediction System for Indian Airports")
 st.markdown("### Comprehensive Machine Learning-Based Turbulence Analysis")

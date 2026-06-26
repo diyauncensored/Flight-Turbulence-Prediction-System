@@ -7,8 +7,22 @@ import streamlit as st
 class TurbulenceDatabase:
     def __init__(self):
         self.database_url = os.getenv("DATABASE_URL")
+        self.connection_error = None
         self.demo_mode = not bool(self.database_url)
         
+        if self.database_url:
+            try:
+                conn = psycopg2.connect(
+                    self.database_url,
+                    cursor_factory=RealDictCursor,
+                    connect_timeout=5,
+                )
+                conn.close()
+                self.demo_mode = False
+            except Exception as e:
+                self.connection_error = str(e)
+                self.demo_mode = True
+
         # In-memory storage for demo mode
         if self.demo_mode:
             if 'demo_pilot_reports' not in st.session_state:
