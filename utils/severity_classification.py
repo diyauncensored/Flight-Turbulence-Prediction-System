@@ -96,8 +96,7 @@ class TurbulenceSeverityClassifier:
             }
         }
     
-    @st.cache_data(ttl=300)  # Cache results for 5 minutes
-    def calculate_turbulence_index(_self, weather_params):
+    def calculate_turbulence_index(self, weather_params):
         """Calculate turbulence index from weather parameters with enhanced accuracy"""
         
         try:
@@ -130,7 +129,9 @@ class TurbulenceSeverityClassifier:
             weather_multiplier = weather_factors.get(weather_condition.lower(), 1.0)
             
             # Visibility impact (reduced visibility often indicates worse conditions)
-            visibility_factor = 1.0 + max(0, (10000 - visibility) / 20000)
+            # OpenWeatherMap returns visibility in km (e.g. 10.0), convert to meters if needed
+            visibility_meters = visibility if visibility > 100 else visibility * 1000
+            visibility_factor = 1.0 + max(0, (10000 - visibility_meters) / 20000)
             
             # Humidity impact (high humidity can indicate unstable air)
             humidity_factor = 1.0 + (humidity - 50) / 200  # Small increase for higher humidity
@@ -176,12 +177,12 @@ class TurbulenceSeverityClassifier:
             (1.0 if wind_speed > 0 else 0.6) *  # Wind data reliability
             (1.0 if wind_shear > 0 else 0.7) *  # Wind shear data reliability
             (1.0 if temperature_gradient != 0 else 0.8) *  # Temperature data reliability
-            (1.0 if visibility < 8000 else 0.9) *  # Visibility impact on confidence
+            (1.0 if visibility_meters < 8000 else 0.9) *  # Visibility impact on confidence
             (0.9 if weather_condition == 'clear' else 1.0)  # Weather condition reliability
         )))
         
         # Store confidence score for later use
-        _self._last_confidence = confidence_score
+        self._last_confidence = confidence_score
         
         # Clamp to 0-10 range
         turbulence_index = max(0, min(10, turbulence_index))

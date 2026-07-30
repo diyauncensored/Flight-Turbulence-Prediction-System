@@ -37,23 +37,12 @@ class AlertSystem:
             if not weather:
                 continue
             
-            # Prepare prediction input
-            flight_params = {
-                'altitude': 35000,
-                'wind_speed': weather['wind_speed'],
-                'wind_direction': weather['wind_direction'],
-                'temperature': weather['temperature'],
-                'pressure': weather['pressure'],
-                'humidity': weather['humidity'],
-                'visibility': weather['visibility']
-            }
+            # Get prediction using unified model
+            predictions, confidence_scores = self.predictor.predict_turbulence(weather, {'altitude': 35000})
             
-            # Get prediction
-            prediction = self.predictor.predict_turbulence(flight_params)
-            
-            if prediction:
-                turbulence_level = prediction['turbulence_index']
-                confidence = prediction['confidence']
+            if predictions and confidence_scores:
+                turbulence_level = predictions.get('ensemble', 0)
+                confidence = confidence_scores.get('ensemble', 0) / 100.0
                 
                 # Determine alert type
                 alert_type = None

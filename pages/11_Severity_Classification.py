@@ -182,7 +182,10 @@ with tab3:
                         'wind_shear': weather['wind_speed'] * 0.3,  # Estimate
                         'temp_gradient': abs(weather['temperature'] - 15),
                         'pressure_change': abs(weather['pressure'] - 1013),
-                        'altitude': altitude_input
+                        'altitude': altitude_input,
+                        'humidity': weather.get('humidity', 50),
+                        'visibility': weather.get('visibility', 10),
+                        'weather_condition': weather.get('weather_condition', 'clear')
                     }
                     
                     turb_index = classifier.calculate_turbulence_index(weather_params)

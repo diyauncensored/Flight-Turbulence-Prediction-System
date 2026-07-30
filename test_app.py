@@ -9,7 +9,7 @@ print("TURBULENCE FORECAST APPLICATION - COMPREHENSIVE TEST")
 print("=" * 60)
 
 # Test 1: Import all utilities
-print("\n[1/6] Testing imports...")
+print("\n[1/7] Testing imports...")
 try:
     from utils.ml_models import TurbulencePredictor, turbulence_model
     from utils.turbulence_calculator import TurbulenceCalculator
@@ -20,7 +20,7 @@ except Exception as e:
     sys.exit(1)
 
 # Test 2: Test TurbulencePredictor initialization
-print("\n[2/6] Testing TurbulencePredictor initialization...")
+print("\n[2/7] Testing TurbulencePredictor initialization...")
 try:
     predictor = TurbulencePredictor()
     print("[OK] TurbulencePredictor initialized successfully")
@@ -29,7 +29,7 @@ except Exception as e:
     sys.exit(1)
 
 # Test 3: Test synthetic data generation
-print("\n[3/6] Testing synthetic data generation...")
+print("\n[3/7] Testing synthetic data generation...")
 try:
     X, y = predictor._generate_synthetic_data(n_samples=100)
     assert X.shape == (100, 10), f"Expected X shape (100, 10), got {X.shape}"
@@ -40,7 +40,7 @@ except Exception as e:
     sys.exit(1)
 
 # Test 4: Test model accuracies
-print("\n[4/6] Testing model accuracy metrics...")
+print("\n[4/7] Testing model accuracy metrics...")
 try:
     accuracies = predictor.get_model_accuracies()
     
@@ -66,7 +66,7 @@ except Exception as e:
     sys.exit(1)
 
 # Test 5: Test feature importance
-print("\n[5/6] Testing feature importance...")
+print("\n[5/7] Testing feature importance...")
 try:
     importance = predictor.get_feature_importance()
     assert importance is not None, "Feature importance returned None"
@@ -76,7 +76,7 @@ except Exception as e:
     sys.exit(1)
 
 # Test 6: Test TurbulenceCalculator
-print("\n[6/6] Testing TurbulenceCalculator...")
+print("\n[6/7] Testing TurbulenceCalculator...")
 try:
     calc = TurbulenceCalculator()
     test_turbulence = 2.5
@@ -90,6 +90,28 @@ try:
     print(f"   Fuel Impact: {fuel_impact:.1f}%")
 except Exception as e:
     print(f"[FAIL] TurbulenceCalculator error: {e}")
+# Test 7: Test predict_turbulence with unified signature
+print("\n[7/7] Testing predict_turbulence unified signature...")
+try:
+    dummy_weather = {
+        'wind_speed': 12.5,
+        'wind_direction': 240.0,
+        'temperature': 25.0,
+        'pressure': 1012.0,
+        'humidity': 65.0,
+        'visibility': 10.0,
+        'weather_condition': 'clouds'
+    }
+    dummy_flight = {
+        'altitude': 35000,
+        'aircraft_type': 'Medium'
+    }
+    predictions, confidence = predictor.predict_turbulence(dummy_weather, dummy_flight)
+    assert 'ensemble' in predictions, "Missing 'ensemble' in predictions"
+    assert 'ensemble' in confidence, "Missing 'ensemble' in confidence"
+    print(f"[OK] predict_turbulence successful (ensemble prediction: {predictions['ensemble']:.2f}, confidence: {confidence['ensemble']:.1f}%)")
+except Exception as e:
+    print(f"[FAIL] predict_turbulence error: {e}")
     sys.exit(1)
 
 print("\n" + "=" * 60)
