@@ -26,8 +26,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-if db.demo_mode and db.connection_error:
-    st.warning("Database unavailable. Running in demo mode until the configured DATABASE_URL can be reached.")
+if db.use_sqlite:
+    st.info("💡 **Database Status:** Running on persistent local SQLite database. Configure `DATABASE_URL` in `.env` to connect to a production PostgreSQL database.")
+elif db.connection_error:
+    st.warning(f"⚠️ **Database Warning:** Failed to connect to PostgreSQL. Falling back to persistent local SQLite database. Error: {db.connection_error}")
 
 # Main page
 st.title("Flight Turbulence Prediction System for Indian Airports")
